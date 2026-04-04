@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { TaskService } from '../task.service';
 import { Task } from '../models';
 import { RouterLink } from '@angular/router';
@@ -10,10 +17,18 @@ import { FilterByStatusPipe } from '../../../../shared/pipes/filter-by-status.pi
 import { NgClass } from '@angular/common';
 import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
 import { SearchService } from '../../../../core/services/search.service';
-
 @Component({
   selector: 'app-task-list',
-  imports: [RouterLink, MatIconModule, MatSelectModule, MatFormFieldModule, TaskCardComponent, FilterByStatusPipe, NgClass, DragDropModule],
+  imports: [
+    RouterLink,
+    MatIconModule,
+    MatSelectModule,
+    MatFormFieldModule,
+    TaskCardComponent,
+    FilterByStatusPipe,
+    NgClass,
+    DragDropModule,
+  ],
   templateUrl: './task-list.component.html',
   styleUrls: ['./task-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -24,6 +39,7 @@ export class TaskListComponent implements OnInit {
 
   // Read directly from the service signal — reflects add/update/delete instantly
   tasks = this.taskService.tasks;
+  isLoading = this.taskService.isLoading;
 
   activeStatus = signal<Task['status'] | null>(null);
   activePriority = signal<Task['priority'] | null>(null);
@@ -69,8 +85,10 @@ export class TaskListComponent implements OnInit {
   onDrop(event: CdkDragDrop<Task['status']>): void {
     const task: Task = event.item.data;
     const targetStatus = event.container.data;
-    const insertBeforeId = this.filteredTasks()
-      .filter(t => t.status === targetStatus && t.id !== task.id)[event.currentIndex]?.id ?? null;
+    const insertBeforeId =
+      this.filteredTasks().filter((t) => t.status === targetStatus && t.id !== task.id)[
+        event.currentIndex
+      ]?.id ?? null;
     this.taskService.dropTask(task.id, targetStatus, insertBeforeId);
   }
 

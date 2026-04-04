@@ -1,5 +1,13 @@
 @if (statisticsService.isLoading()) {
-  <div class="statistics-loading">Loading statistics…</div>
+  <div class="statistics-grid">
+    @for (n of [1, 2, 3, 4]; track n) {
+      <div class="skeleton-stat-card">
+        <div class="skeleton skeleton-icon-row"></div>
+        <div class="skeleton skeleton-value"></div>
+        <div class="skeleton skeleton-label"></div>
+      </div>
+    }
+  </div>
 } @else {
   <div class="statistics-grid">
     @for (stat of statisticsService.statistics(); track stat.id) {

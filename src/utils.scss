@@ -1,6 +1,5 @@
 // Utils
 
-
 // utils
 .d-flex {
   display: flex !important;
@@ -81,7 +80,6 @@
   margin-right: 0.75rem !important;
 }
 
-
 // paddings
 .p-1 {
   padding: 0.25rem !important;
@@ -119,6 +117,22 @@
   padding-bottom: 0.5rem !important;
 }
 .pb-3 {
-  padding-bottom: 0.75rem !important; 
+  padding-bottom: 0.75rem !important;
 }
 
+// ── Skeleton loading ─────────────────────────────────────────────────────────
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: -400px 0;
+  }
+  100% {
+    background-position: 400px 0;
+  }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%);
+  background-size: 800px 100%;
+  animation: skeleton-shimmer 1.4s infinite linear;
+  border-radius: 4px;
+}

@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
-import { map, tap } from 'rxjs/operators';
+import { delay, map, tap } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { Task, TaskFormData } from './models';
 
@@ -13,6 +13,7 @@ export class TaskService {
   // In-memory store — loaded once from JSON, mutated for add/update/delete, Session-lifetime persistence only
   private _tasks = signal<Task[]>([]);
   readonly tasks = this._tasks.asReadonly();
+  readonly isLoading = signal(true);
 
   // Prevent _tasks from being overwritten by the cache interceptor's tap() on repeat calls
   private loaded = false;
@@ -21,9 +22,11 @@ export class TaskService {
   loadTasks(): Observable<Task[]> {
     if (this.loaded) return of(this._tasks());
     return this.http.get<{ tasks: Task[] }>('tasks.json').pipe(
+      delay(1000),
       tap((data) => {
         this._tasks.set(data.tasks);
         this.loaded = true;
+        this.isLoading.set(false);
       }),
       map((data) => data.tasks),
     );
