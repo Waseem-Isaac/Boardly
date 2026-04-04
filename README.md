@@ -65,13 +65,37 @@ ng build
 
 This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
 
-## Running unit tests
+## Unit Tests
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+Tests are written with the following tools:
+
+| Tool | Role |
+|---|---|
+| [Vitest](https://vitest.dev/) | Test runner (Angular's default since v21) — `describe`, `it`, `expect`, `vi.fn()`, `vi.useFakeTimers()` |
+| Angular `TestBed` | Component/service instantiation and DI setup |
+| `HttpTestingController` | Intercept and flush HTTP requests without a real server |
+| `ComponentFixture` | Render components and trigger change detection in tests |
 
 ```bash
-ng test
+npm test          # watch mode
+npx ng test --watch=false   # single run
 ```
+
+**Coverage (37 tests across 7 files):**
+
+| File | Tests | What's covered |
+|---|---|---|
+| `task.service.spec.ts` | 15 | `loadTasks` (HTTP, caching, `isLoading`), `createTask`, `updateTask`, `deleteTask`, `dropTask`, `getTaskById` |
+| `task-card.component.spec.ts` | 10 | `getAvatarInitials` (various name formats), `isOverdue` (overdue / done / future / in-progress), `deleteRequested` output |
+| `task-list.component.spec.ts` | 8 | `filteredTasks` (by status, priority, cleared), `setFilter`, `handleDelete` delegates to service |
+| Other stubs | 4 | `AppComponent`, `TaskEditComponent`, `TaskAddComponent`, `TaskFormComponent` — `should create` |
+
+**Key testing patterns used:**
+
+- `provideHttpClientTesting()` + `HttpTestingController` to intercept and flush HTTP requests
+- `vi.useFakeTimers()` + `vi.advanceTimersByTimeAsync()` to fast-forward `delay(1000)` in `loadTasks`
+- `vi.fn()` stubs and signal mocks to isolate `TaskListComponent` from real services
+- `fixture.componentRef.setInput()` to satisfy `input.required<Task>()` in `TaskCardComponent`
 
 ## Running end-to-end tests
 

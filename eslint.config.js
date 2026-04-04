@@ -15,6 +15,7 @@ module.exports = [
   // ── TypeScript files ────────────────────────────────────────────────────────
   {
     files: ['**/*.ts'],
+    ignores: ['**/*.spec.ts'],
     languageOptions: {
       parser: tsParser,
       parserOptions: {
@@ -45,6 +46,27 @@ module.exports = [
         'error',
         { type: 'attribute', prefix: 'app', style: 'camelCase' },
       ],
+    },
+  },
+
+  // ── Spec / test files ────────────────────────────────────────────────────────
+  {
+    files: ['**/*.spec.ts'],
+    languageOptions: {
+      parser: tsParser,
+      parserOptions: {
+        project: './tsconfig.spec.json',
+        tsconfigRootDir: __dirname,
+      },
+    },
+    plugins: {
+      '@typescript-eslint': tsPlugin,
+      '@angular-eslint': angular,
+    },
+    rules: {
+      ...tsPlugin.configs['recommended'].rules,
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
     },
   },
 
