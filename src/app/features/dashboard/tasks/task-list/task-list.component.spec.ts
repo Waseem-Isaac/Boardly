@@ -38,6 +38,7 @@ describe('TaskListComponent', () => {
     const fakeTaskService = {
       tasks: tasksSignal.asReadonly(),
       isLoading: isLoadingSignal.asReadonly(),
+      users: signal([]),
       loadTasks: vi.fn(() => of([])),
       deleteTask: vi.fn(() => of(void 0)),
       dropTask: vi.fn(),
