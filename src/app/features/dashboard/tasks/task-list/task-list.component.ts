@@ -8,10 +8,11 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { TaskCardComponent } from '../components/task-card/task-card.component';
 import { FilterByStatusPipe } from '../../../../shared/pipes/filter-by-status.pipe';
 import { NgClass } from '@angular/common';
+import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-task-list',
-  imports: [RouterLink, MatIconModule, MatSelectModule, MatFormFieldModule, TaskCardComponent, FilterByStatusPipe, NgClass],
+  imports: [RouterLink, MatIconModule, MatSelectModule, MatFormFieldModule, TaskCardComponent, FilterByStatusPipe, NgClass, DragDropModule],
   templateUrl: './task-list.component.html',
   styleUrls: ['./task-list.component.scss']
 })
@@ -54,7 +55,14 @@ export class TaskListComponent implements OnInit {
 
   handleDelete(taskId: string): void {
     this.taskService.deleteTask(taskId).subscribe();
-    /** Tasks updated in the service signal automatically */
+  }
+
+  onDrop(event: CdkDragDrop<Task['status']>): void {
+    const task: Task = event.item.data;
+    const targetStatus = event.container.data;
+    const insertBeforeId = this.filteredTasks()
+      .filter(t => t.status === targetStatus && t.id !== task.id)[event.currentIndex]?.id ?? null;
+    this.taskService.dropTask(task.id, targetStatus, insertBeforeId);
   }
 
   assignees = computed(() => {

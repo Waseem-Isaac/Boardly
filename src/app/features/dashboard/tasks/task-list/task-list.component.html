@@ -37,16 +37,20 @@
   </div>
 
   <!-- 3-column kanban: columns always visible, content filtered by activeStatus -->
-  <div class="tasks-columns">
+  <div class="tasks-columns" cdkDropListGroup>
 
     @for (col of columns; track col.status) {
-      <div class="column" [ngClass]="{ 'non-active-status-column': activeStatus() !== null && activeStatus() !== col.status }">
+      <div class="column"
+           [ngClass]="{ 'non-active-status-column': activeStatus() !== null && activeStatus() !== col.status }"
+           cdkDropList
+           [cdkDropListData]="col.status"
+           (cdkDropListDropped)="onDrop($event)">
         <div class="column-header">
           <span class="column-title">{{ col.label }}</span>
           <span class="task-count badge">{{ (filteredTasks() | filterByStatus:col.status).length }}</span>
         </div>
         @for (task of filteredTasks() | filterByStatus:col.status; track task.id) {
-          <app-task-card [task]="task" (deleteRequested)="handleDelete($event)" />
+          <app-task-card cdkDrag [cdkDragData]="task" [task]="task" (deleteRequested)="handleDelete($event)" />
         } 
       </div>
     }

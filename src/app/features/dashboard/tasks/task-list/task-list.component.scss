@@ -101,6 +101,23 @@
             background-color: var(--color-inactive);
             opacity: 0.6;
           }
+
+          // CDK drop list states
+          &.cdk-drop-list-receiving {
+            background-color: rgba(25, 118, 210, 0.05);
+            outline: 2px dashed var(--color-primary);
+            outline-offset: -2px;
+          }
+
+          &.cdk-drop-list-dragging {
+            background-color: rgba(25, 118, 210, 0.03);
+          }
+
+          // Drag cursor on cards
+          ::ng-deep app-task-card {
+            cursor: grab;
+            &:active { cursor: grabbing; }
+          }
         }
 
         @media screen and (max-width: 992px) {
