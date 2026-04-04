@@ -7,16 +7,26 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { SearchService } from '../../core/services/search.service';
+import { LayoutService } from '../../core/services/layout.service';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [RouterLink, MatToolbarModule, MatFormFieldModule, MatInputModule, MatIconModule, MatButtonModule, FormsModule],
+  imports: [
+    RouterLink,
+    MatToolbarModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatIconModule,
+    MatButtonModule,
+    FormsModule,
+  ],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent {
   private searchService = inject(SearchService);
+  protected layout = inject(LayoutService);
 
   // Reflect the debounced signal back for the clear-button visibility check
   readonly searchTerm = this.searchService.searchTerm;

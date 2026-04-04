@@ -6,17 +6,22 @@
       [routerLink]="item.route"
       routerLinkActive="active-nav-item"
       [routerLinkActiveOptions]="{ exact: true }"
+      (click)="layout.isMobile() && layout.close()"
     >
-      {{item.icon}}
+      {{ item.icon }}
       {{ item.label }}
     </a>
   }
 
-
-  <a [routerLink]="'/dashboard/tasks/add'" class="m-4 nav-item btn-primary" mat-list-item mat-button> 
+  <a
+    [routerLink]="'/dashboard/tasks/add'"
+    class="m-4 nav-item btn-primary"
+    mat-list-item
+    mat-button
+  >
     <span class="d-flex align-items-center justify-content-center">
-      <mat-icon class="d-flex align-items-center justify-content-center">add</mat-icon> 
-       New Task
+      <mat-icon class="d-flex align-items-center justify-content-center">add</mat-icon>
+      New Task
     </span>
   </a>
 </mat-nav-list>

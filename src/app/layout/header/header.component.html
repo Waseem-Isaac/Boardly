@@ -1,4 +1,10 @@
 <mat-toolbar color="primary">
+  @if (layout.isMobile()) {
+    <button mat-icon-button (click)="layout.toggle()" aria-label="Toggle menu">
+      <mat-icon>menu</mat-icon>
+    </button>
+  }
+
   <a routerLink="/tasks" class="brand-link">
     <img src="icons/logo.png" alt="Logo" />
     Task Manager

@@ -1,7 +1,12 @@
 <app-header />
 
 <mat-sidenav-container class="app-container">
-  <mat-sidenav mode="side" opened class="app-sidenav">
+  <mat-sidenav
+    [mode]="layout.isMobile() ? 'over' : 'side'"
+    [opened]="layout.isMobile() ? layout.sidenavOpen() : true"
+    (backdropClick)="layout.close()"
+    class="app-sidenav"
+  >
     <app-sidenav />
   </mat-sidenav>
 
