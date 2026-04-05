@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -30,20 +30,22 @@ export class TaskFormComponent implements OnInit {
   @Output() formCancel = new EventEmitter<void>();
   today = new Date();
   taskForm!: FormGroup;
+  // Prefer using the inject() function over constructor parameter injection. Use Angular's migration schematic to automatically refactor: ng generate @angular/core:injecteslint@angular-eslint/prefer-inject
+  fb = inject(FormBuilder);
 
   statusOptions = [
     { value: 'todo', label: 'To Do' },
     { value: 'in_progress', label: 'In Progress' },
-    { value: 'done', label: 'Done' }
+    { value: 'done', label: 'Done' },
   ];
 
   priorityOptions = [
     { value: 'low', label: 'Low' },
     { value: 'medium', label: 'Medium' },
-    { value: 'high', label: 'High' }
+    { value: 'high', label: 'High' },
   ];
 
-  constructor(private fb: FormBuilder) {}
+  constructor() {}
 
   ngOnInit(): void {
     this.initForm();
@@ -55,14 +57,17 @@ export class TaskFormComponent implements OnInit {
       description: [this.task?.description || '', [Validators.required]],
       status: [this.task?.status, [Validators.required]],
       priority: [this.task?.priority, [Validators.required]],
-      dueDate: [this.task?.dueDate ? new Date(this.task.dueDate + 'T00:00:00') : null, [Validators.required]],
+      dueDate: [
+        this.task?.dueDate ? new Date(this.task.dueDate + 'T00:00:00') : null,
+        [Validators.required],
+      ],
       assignee: this.fb.group({
         id: [this.task?.assignee?.id || ''],
         name: [this.task?.assignee?.name || '', [Validators.required]],
         avatar: [this.task?.assignee?.avatar || ''],
-        email: [this.task?.assignee?.email || '', [Validators.required, Validators.email]]
+        email: [this.task?.assignee?.email || '', [Validators.required, Validators.email]],
       }),
-      tags: [this.task?.tags || []]
+      tags: [this.task?.tags || []],
     });
   }
 
@@ -73,6 +78,10 @@ export class TaskFormComponent implements OnInit {
       if (formValue.dueDate instanceof Date) {
         const d = formValue.dueDate;
         formValue.dueDate = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+      }
+      // Generate a unique ID for new assignees
+      if (!formValue.assignee.id) {
+        formValue.assignee = { ...formValue.assignee, id: crypto.randomUUID() };
       }
       this.formSubmit.emit(formValue);
     } else {
