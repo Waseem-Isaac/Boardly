@@ -15,6 +15,7 @@
   }
 
   .user-card {
+    position: relative;
     display: flex;
     align-items: center;
     gap: 1rem;
@@ -30,6 +31,30 @@
       transform: translateY(-2px);
     }
 
+    .delete-btn {
+      position: absolute;
+      // background-color: var(--color-body-bg);
+      color: var(--color-danger);
+      width: 2rem;
+      height: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      top: 0;
+      right: 0;
+      font-weight: bolder;
+      line-height: 24px;
+      background: var(--color-body-bg);
+      border-bottom-left-radius: 1rem;
+      box-shadow: 0px 2px 4px 0px #00000014;
+
+      mat-icon {
+        font-size: 16px;
+        width: 16px;
+        height: 16px;
+      }
+    }
+
     // Let the global shimmer override the card's white background
     &.skeleton {
       background: linear-gradient(
@@ -38,24 +63,6 @@
         #fff 50%,
         var(--color-light-grey) 75%
       );
-    }
-  }
-
-  .user-avatar {
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    flex-shrink: 0;
-    object-fit: cover;
-
-    &--initials {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: var(--color-primary);
-      color: var(--color-primary-contrast);
-      font-size: 0.875rem;
-      font-weight: 600;
     }
   }
 
@@ -77,6 +84,7 @@
     font-weight: 600;
     color: var(--color-dark);
   }
+
   .user-email {
     font-size: 0.75rem;
     color: var(--color-neutral);

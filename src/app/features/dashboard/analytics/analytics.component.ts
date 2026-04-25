@@ -28,7 +28,7 @@ export class AnalyticsComponent implements OnInit {
     type Priority = 'low' | 'medium' | 'high';
 
     const count = (status: (typeof statuses)[number], priority: Priority) =>
-      tasks.filter((t) => t.status === status && t.priority === priority).length;
+      tasks?.filter((t) => t.status === status && t.priority === priority).length;
 
     return {
       labels: ['To Do', 'In Progress', 'Done'],

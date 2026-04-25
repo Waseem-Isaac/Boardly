@@ -1,7 +1,17 @@
 <div class="users-page">
-  <h2 class="page-title">Team Members</h2>
+  <div class="page-header d-flex align-items-center justify-content-between">
+    <h2 class="page-title">Team Members</h2>
+    <button class="btn btn-primary" (click)="openAddUserDialog()">
+      <span class="d-flex align-items-center justify-content-center gap-1">
+        <mat-icon class="d-flex align-items-center justify-content-center mx-2"
+          >person_add</mat-icon
+        >
+        Add User
+      </span>
+    </button>
+  </div>
 
-  @if (taskService.isLoading()) {
+  @if (usersService.isLoading()) {
     <div class="users-grid">
       @for (n of [1, 2, 3, 4, 5, 6]; track n) {
         <div class="user-card skeleton"></div>
@@ -9,9 +19,12 @@
     </div>
   } @else {
     <div class="users-grid">
-      @for (user of taskService.users(); track user.id) {
+      @for (user of usersService.users(); track user._id) {
         <div class="user-card">
-          <div class="user-avatar user-avatar--initials">{{ getAvatarInitials(user.name) }}</div>
+          <button class="delete-btn" mat-icon-button (click)="deleteUser(user._id!)">
+            <mat-icon>close</mat-icon>
+          </button>
+          <div class="user-avatar lg">{{ usersService.getAvatarInitials(user.name) }}</div>
           <div class="user-info">
             <span class="user-name">{{ user.name }}</span>
             <span class="user-email">{{ user.email }}</span>

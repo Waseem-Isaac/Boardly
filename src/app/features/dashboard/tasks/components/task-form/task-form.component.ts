@@ -9,8 +9,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
 import { Task, TaskFormData } from '../../models';
+import { UsersService } from '../../../users/users.service';
 
 @Component({
   selector: 'app-task-form',
@@ -22,7 +22,6 @@ import { Task, TaskFormData } from '../../models';
     MatSelectModule,
     MatButtonModule,
     MatDatepickerModule,
-    MatNativeDateModule,
   ],
   templateUrl: './task-form.component.html',
   styleUrls: ['./task-form.component.scss'],
@@ -36,6 +35,7 @@ export class TaskFormComponent implements OnInit {
   taskForm!: FormGroup;
   // Prefer using the inject() function over constructor parameter injection. Use Angular's migration schematic to automatically refactor: ng generate @angular/core:injecteslint@angular-eslint/prefer-inject
   fb = inject(FormBuilder);
+  usersService = inject(UsersService);
 
   statusOptions = [
     { value: 'todo', label: 'To Do' },
@@ -65,14 +65,13 @@ export class TaskFormComponent implements OnInit {
         this.task?.dueDate ? new Date(this.task.dueDate + 'T00:00:00') : null,
         [Validators.required],
       ],
-      assignee: this.fb.group({
-        id: [this.task?.assignee?.id || ''],
-        name: [this.task?.assignee?.name || '', [Validators.required]],
-        avatar: [this.task?.assignee?.avatar || ''],
-        email: [this.task?.assignee?.email || '', [Validators.required, Validators.email]],
-      }),
+      assignee: [this.task?.assignee?._id || null, [Validators.required]],
       tags: [this.task?.tags || []],
     });
+
+    if (this.task) {
+      this.taskForm.markAllAsTouched();
+    }
   }
 
   onSubmit(): void {
@@ -83,11 +82,8 @@ export class TaskFormComponent implements OnInit {
         const d = formValue.dueDate;
         formValue.dueDate = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
       }
-      // Generate a unique ID for new assignees
-      if (!formValue.assignee.id) {
-        formValue.assignee = { ...formValue.assignee, id: crypto.randomUUID() };
-      }
-      this.formSubmit.emit(formValue);
+
+      this.formSubmit.emit({ ...formValue });
     } else {
       this.taskForm.markAllAsTouched();
     }
@@ -108,6 +104,16 @@ export class TaskFormComponent implements OnInit {
     if (field?.hasError('email')) {
       return 'Invalid email format';
     }
+    // date validation could be added here if needed : `matDatepickerMin` and `matDatepickerMax` validators
+    if (fieldName === 'dueDate') {
+      if (field?.hasError('matDatepickerMin')) {
+        return 'Due date cannot be in the past';
+      }
+      if (field?.hasError('matDatepickerMax')) {
+        return 'Due date cannot be in the future';
+      }
+    }
+
     return '';
   }
 }

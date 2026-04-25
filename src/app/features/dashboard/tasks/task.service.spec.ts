@@ -8,7 +8,7 @@ import { Task, TaskFormData } from './models';
 const mockAssignee = { id: 'u1', name: 'John Doe', avatar: '', email: 'john@test.com' };
 
 const makeTask = (overrides: Partial<Task> = {}): Task => ({
-  id: 'task-1',
+  _id: 'task-1',
   title: 'Test Task',
   description: 'A description',
   status: 'todo',
@@ -64,7 +64,7 @@ describe('TaskService', () => {
     });
 
     it('should load tasks from tasks.json and set isLoading to false', async () => {
-      const tasks = [makeTask({ id: 'task-1' }), makeTask({ id: 'task-2' })];
+      const tasks = [makeTask({ _id: 'task-1' }), makeTask({ _id: 'task-2' })];
 
       await simulateLoad(service, httpMock, tasks);
 
@@ -98,36 +98,36 @@ describe('TaskService', () => {
 
       expect(created).toBeDefined();
       expect(created!.title).toBe('Created Task');
-      expect(created!.id).toMatch(/^task-\d+/);
+      expect(created!._id).toMatch(/^task-\d+/);
     });
   });
 
   describe('updateTask()', () => {
     it('should replace the matching task in the signal', () => {
       service.createTask(makeFormData({ title: 'Original' })).subscribe();
-      const id = service.tasks()[0].id;
+      const id = service.tasks()[0]._id;
 
       service.updateTask(id, makeFormData({ title: 'Updated' })).subscribe();
 
-      expect(service.tasks().find((t) => t.id === id)?.title).toBe('Updated');
+      expect(service.tasks().find((t) => t._id === id)?.title).toBe('Updated');
     });
 
     it('should return the updated task with the same id', () => {
       service.createTask(makeFormData()).subscribe();
-      const id = service.tasks()[0].id;
+      const id = service.tasks()[0]._id;
 
       let updated: Task | undefined;
       service.updateTask(id, makeFormData({ title: 'New Title' })).subscribe((t) => (updated = t));
 
       expect(updated?.title).toBe('New Title');
-      expect(updated?.id).toBe(id);
+      expect(updated?._id).toBe(id);
     });
 
     it('should not affect other tasks', () => {
       service.createTask(makeFormData({ title: 'Other' })).subscribe();
       vi.advanceTimersByTime(1); // ensure unique Date.now()-based id
       service.createTask(makeFormData({ title: 'Target' })).subscribe();
-      const [targetId] = service.tasks().map((t) => t.id);
+      const [targetId] = service.tasks().map((t) => t._id);
 
       service.updateTask(targetId, makeFormData({ title: 'Changed' })).subscribe();
 
@@ -138,18 +138,18 @@ describe('TaskService', () => {
   describe('deleteTask()', () => {
     it('should remove the task from the signal', () => {
       service.createTask(makeFormData({ title: 'To Delete' })).subscribe();
-      const id = service.tasks()[0].id;
+      const id = service.tasks()[0]._id;
 
       service.deleteTask(id).subscribe();
 
-      expect(service.tasks().some((t) => t.id === id)).toBe(false);
+      expect(service.tasks().some((t) => t._id === id)).toBe(false);
     });
 
     it('should not affect other tasks', () => {
       service.createTask(makeFormData({ title: 'Stay' })).subscribe();
       vi.advanceTimersByTime(1); // ensure unique Date.now()-based id
       service.createTask(makeFormData({ title: 'Delete Me' })).subscribe();
-      const deleteId = service.tasks()[0].id;
+      const deleteId = service.tasks()[0]._id;
 
       service.deleteTask(deleteId).subscribe();
 
@@ -161,24 +161,24 @@ describe('TaskService', () => {
   describe('dropTask()', () => {
     it('should change the task status', () => {
       service.createTask(makeFormData({ title: 'Movable', status: 'todo' })).subscribe();
-      const id = service.tasks()[0].id;
+      const id = service.tasks()[0]._id;
 
       service.dropTask(id, 'in_progress', null);
 
-      expect(service.tasks().find((t) => t.id === id)?.status).toBe('in_progress');
+      expect(service.tasks().find((t) => t._id === id)?.status).toBe('in_progress');
     });
 
     it('should append to the end of the target column when insertBeforeId is null', () => {
       service.createTask(makeFormData({ title: 'Anchor', status: 'done' })).subscribe();
       service.createTask(makeFormData({ title: 'Mover', status: 'todo' })).subscribe();
-      const moverId = service.tasks()[0].id;
+      const moverId = service.tasks()[0]._id;
 
       service.dropTask(moverId, 'done', null);
 
       const doneIds = service
         .tasks()
         .filter((t) => t.status === 'done')
-        .map((t) => t.id);
+        .map((t) => t._id);
       expect(doneIds[doneIds.length - 1]).toBe(moverId);
     });
 
@@ -186,11 +186,11 @@ describe('TaskService', () => {
       service.createTask(makeFormData({ title: 'A', status: 'done' })).subscribe();
       vi.advanceTimersByTime(1); // ensure unique Date.now()-based id
       service.createTask(makeFormData({ title: 'B', status: 'done' })).subscribe();
-      const [idB, idA] = service.tasks().map((t) => t.id);
+      const [idB, idA] = service.tasks().map((t) => t._id);
 
       service.dropTask(idB, 'done', idA);
 
-      const ids = service.tasks().map((t) => t.id);
+      const ids = service.tasks().map((t) => t._id);
       expect(ids.indexOf(idB)).toBeLessThan(ids.indexOf(idA));
     });
   });
@@ -198,7 +198,7 @@ describe('TaskService', () => {
   describe('getTaskById()', () => {
     it('should return the task by id from in-memory store', () => {
       service.createTask(makeFormData({ title: 'Find Me' })).subscribe();
-      const id = service.tasks()[0].id;
+      const id = service.tasks()[0]._id;
 
       let found: Task | undefined;
       service.getTaskById(id).subscribe((t) => (found = t));

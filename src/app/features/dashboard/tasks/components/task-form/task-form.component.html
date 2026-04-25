@@ -1,5 +1,4 @@
 <form [formGroup]="taskForm" (ngSubmit)="onSubmit()" class="task-form">
-
   <!-- Title -->
   <mat-form-field appearance="outline" class="full-width">
     <mat-label>Title</mat-label>
@@ -10,7 +9,12 @@
   <!-- Description -->
   <mat-form-field appearance="outline" class="full-width">
     <mat-label>Description</mat-label>
-    <textarea matInput formControlName="description" placeholder="Enter task description" rows="4"></textarea>
+    <textarea
+      matInput
+      formControlName="description"
+      placeholder="Enter task description"
+      rows="4"
+    ></textarea>
     <mat-error>{{ getFieldError('description') }}</mat-error>
   </mat-form-field>
 
@@ -40,33 +44,33 @@
   <!-- Due Date -->
   <mat-form-field appearance="outline" class="full-width">
     <mat-label>Due Date</mat-label>
-    <input matInput [matDatepicker]="dueDatePicker" formControlName="dueDate" placeholder="MM/DD/YYYY" readonly [min]="today" />
+    <input
+      matInput
+      [matDatepicker]="dueDatePicker"
+      formControlName="dueDate"
+      placeholder="MM/DD/YYYY"
+      readonly
+      [min]="today"
+    />
     <mat-datepicker-toggle matIconSuffix [for]="dueDatePicker" />
     <mat-datepicker #dueDatePicker />
     <mat-error>{{ getFieldError('dueDate') }}</mat-error>
   </mat-form-field>
 
   <!-- Assignee -->
-  <div formGroupName="assignee" class="assignee-group">
-    <p class="assignee-title">Assignee Information</p>
-
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Name</mat-label>
-      <input matInput formControlName="name" placeholder="Enter assignee name" />
-      <mat-error>{{ getFieldError('assignee.name') }}</mat-error>
-    </mat-form-field>
-
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Email</mat-label>
-      <input matInput type="email" formControlName="email" placeholder="Enter assignee email" />
-      <mat-error>{{ getFieldError('assignee.email') }}</mat-error>
-    </mat-form-field>
-  </div>
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Assignee</mat-label>
+    <mat-select formControlName="assignee">
+      @for (user of usersService.users(); track user._id) {
+        <mat-option [value]="user._id">{{ user.name }}</mat-option>
+      }
+    </mat-select>
+    <mat-error>{{ getFieldError('assignee') }}</mat-error>
+  </mat-form-field>
 
   <!-- Actions -->
   <div class="form-actions">
     <button mat-flat-button type="button" (click)="onCancel()">Cancel</button>
-    <button class="btn-primary" mat-button type="submit" [disabled]="taskForm.invalid"> Save </button>
+    <button class="btn-primary" mat-button type="submit" [disabled]="taskForm.invalid">Save</button>
   </div>
-
 </form>

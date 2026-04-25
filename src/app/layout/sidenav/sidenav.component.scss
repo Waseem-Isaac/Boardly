@@ -1,8 +1,9 @@
 :host {
   .nav-item {
-    margin-bottom: 1rem;  
+    margin-bottom: 1rem;
     display: flex;
     align-items: center;
+    border: none;
     &.active-nav-item {
       background: var(--mat-sys-primary-container) !important;
       color: var(--mat-sys-on-primary-container) !important;
@@ -13,4 +14,3 @@
     }
   }
 }
-

@@ -12,19 +12,22 @@ import {
 } from '@angular/core';
 import { TaskService } from '../task.service';
 import { Task } from '../models';
-import { RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatDialog } from '@angular/material/dialog';
 import { TaskCardComponent } from '../components/task-card/task-card.component';
 import { FilterByStatusPipe } from '../../../../shared/pipes/filter-by-status.pipe';
 import { NgClass } from '@angular/common';
 import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
 import { SearchService } from '../../../../core/services/search.service';
+import { TaskAddComponent } from '../task-add/task-add.component';
+import { TaskEditComponent } from '../task-edit/task-edit.component';
+import { Confirmable } from '../../../../shared/decorators/confirmable.decorator';
+import { UsersService } from '../../users/users.service';
 @Component({
   selector: 'app-task-list',
   imports: [
-    RouterLink,
     MatIconModule,
     MatSelectModule,
     MatFormFieldModule,
@@ -39,7 +42,9 @@ import { SearchService } from '../../../../core/services/search.service';
 })
 export class TaskListComponent implements OnInit {
   private taskService = inject(TaskService);
+  private usersService = inject(UsersService);
   private searchService = inject(SearchService);
+  private dialog = inject(MatDialog);
 
   // Read directly from the service signal — reflects add/update/delete instantly
   tasks = this.taskService.tasks;
@@ -59,10 +64,10 @@ export class TaskListComponent implements OnInit {
     const priority = this.activePriority();
     const assignee = this.activeAssignee();
     const query = this.searchService.searchTerm().toLowerCase().trim();
-    return this.tasks().filter((t) => {
+    return this.tasks()?.filter((t) => {
       if (status && t.status !== status) return false;
       if (priority && t.priority !== priority) return false;
-      if (assignee && t.assignee.id !== assignee) return false;
+      if (assignee && t.assignee._id !== assignee) return false;
       if (query) {
         const inTitle = t.title.toLowerCase().includes(query);
         const inDescription = t.description.toLowerCase().includes(query);
@@ -82,19 +87,32 @@ export class TaskListComponent implements OnInit {
     this.activeStatus.set(status);
   }
 
+  @Confirmable({ title: 'Delete Task', message: 'Are you sure you want to remove this task?' })
   handleDelete(taskId: string): void {
     this.taskService.deleteTask(taskId).subscribe();
+  }
+
+  openAddDialog(): void {
+    this.dialog.open(TaskAddComponent, { panelClass: 'task-dialog', disableClose: true });
+  }
+
+  openEditDialog(taskId: string): void {
+    this.dialog.open(TaskEditComponent, {
+      panelClass: 'task-dialog',
+      disableClose: true,
+      data: { taskId },
+    });
   }
 
   onDrop(event: CdkDragDrop<Task['status']>): void {
     const task: Task = event.item.data;
     const targetStatus = event.container.data;
     const insertBeforeId =
-      this.filteredTasks().filter((t) => t.status === targetStatus && t.id !== task.id)[
+      this.filteredTasks()?.filter((t) => t.status === targetStatus && t._id !== task._id)[
         event.currentIndex
-      ]?.id ?? null;
-    this.taskService.dropTask(task.id, targetStatus, insertBeforeId);
+      ]?._id ?? null;
+    this.taskService.dropTask(task._id, targetStatus, insertBeforeId);
   }
 
-  assignees = this.taskService.users;
+  assignees = this.usersService.users;
 }

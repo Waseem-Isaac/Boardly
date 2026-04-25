@@ -12,6 +12,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { SearchService } from '../../core/services/search.service';
 import { LayoutService } from '../../core/services/layout.service';
+import { MatMenuModule } from '@angular/material/menu';
+import { AuthService } from '../../core/services/auth.service';
+import { UsersService } from '../../features/dashboard/users/users.service';
 
 @Component({
   selector: 'app-header',
@@ -24,13 +27,16 @@ import { LayoutService } from '../../core/services/layout.service';
     MatIconModule,
     MatButtonModule,
     FormsModule,
+    MatMenuModule,
   ],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent {
   private searchService = inject(SearchService);
-  protected layout = inject(LayoutService);
+  protected layoutService = inject(LayoutService);
+  protected authService = inject(AuthService);
+  protected usersService = inject(UsersService);
 
   // Reflect the debounced signal back for the clear-button visibility check
   readonly searchTerm = this.searchService.searchTerm;

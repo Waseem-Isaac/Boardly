@@ -10,7 +10,7 @@
 
     &.overdue {
       background-color: var(--color-badge-risk);
-      border-left: .25rem solid var(--color-danger);
+      border-left: 0.25rem solid var(--color-danger);
     }
   }
 
@@ -38,7 +38,7 @@
     }
   }
 
-   // Action buttons (edit / delete)
+  // Action buttons (edit / delete)
   .card-header .actions .menu-btn {
     color: var(--color-neutral);
     background: transparent;
@@ -84,29 +84,15 @@
   }
 
   .card-divider {
-     border-color: transparent; 
+    border-color: transparent;
     border-top: 1px solid var(--color-light-grey);
     margin: 0.75rem 0;
   }
 
   // Assignee
-  .avatar {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    background-color: var(--color-primary);
-    color: #fff;
-    font-size: 0.6875rem;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-  }
 
   .assignee-name {
     font-size: 0.75rem;
     color: var(--color-dark);
   }
 }
-

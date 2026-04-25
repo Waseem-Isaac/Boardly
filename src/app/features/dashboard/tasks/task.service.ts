@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
-import { computed, inject, Injectable, signal } from '@angular/core';
-import { delay, map, tap } from 'rxjs/operators';
+import { inject, Injectable, signal } from '@angular/core';
+import { map, tap } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
-import { Assignee, Task, TaskFormData } from './models';
+import { Task, TaskFormData } from './models';
 
 @Injectable({
   providedIn: 'root',
@@ -16,16 +16,15 @@ export class TaskService {
   readonly isLoading = signal(true);
 
   // Prevent _tasks from being overwritten by the cache interceptor's tap() on repeat calls
-  private loaded = false;
+  private _loaded = false;
 
   // httpResource is not used here because _tasks must be mutated (in-memory) after load (add/edit/delete/reorder)
   loadTasks(): Observable<Task[]> {
-    if (this.loaded) return of(this._tasks());
-    return this.http.get<{ tasks: Task[] }>('tasks.json').pipe(
-      delay(1000),
+    if (this._loaded) return of(this._tasks());
+    return this.http.get<{ tasks: Task[] }>(`tasks`).pipe(
       tap((data) => {
         this._tasks.set(data.tasks);
-        this.loaded = true;
+        this._loaded = true;
         this.isLoading.set(false);
       }),
       map((data) => data.tasks),
@@ -33,81 +32,65 @@ export class TaskService {
   }
 
   getTaskById(id: string): Observable<Task | undefined> {
-    const found = this._tasks().find((t) => t.id === id);
-    if (found) return of(found);
-    // fallback: load first then find
-    return new Observable((observer) => {
-      this.loadTasks().subscribe(() => {
-        observer.next(this._tasks().find((t) => t.id === id));
-        observer.complete();
-      });
-    });
+    return this.http.get<Task>(`tasks/${id}`).pipe(map((task) => task || undefined));
   }
 
   createTask(taskData: TaskFormData): Observable<Task> {
-    const newTask: Task = {
-      ...taskData,
-      id: `task-${Date.now()}`,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
-    this._tasks.update((tasks) => [newTask, ...tasks]);
-    return of(newTask);
+    return this.http.post<Task>(`tasks`, taskData).pipe(
+      tap((created) => {
+        this._tasks.update((tasks) => [created, ...(tasks ?? [])]);
+      }),
+    );
+
+    // this._tasks.update((tasks) => [newTask, ...tasks]);
+    // return of(newTask);
   }
 
   updateTask(id: string, taskData: TaskFormData): Observable<Task> {
-    const existing = this._tasks().find((t) => t.id === id);
-    const updatedTask: Task = {
-      ...taskData,
-      id,
-      createdAt: existing?.createdAt ?? new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
-    this._tasks.update((tasks) => tasks.map((t) => (t.id === id ? updatedTask : t)));
-    return of(updatedTask);
+    return this.http.put<Task>(`tasks/${id}`, taskData).pipe(
+      tap((updated) => {
+        // Reflect the task in the in-memory signal store to reflect changes immediately in the UI
+        this._tasks.update((tasks) => tasks.map((t) => (t._id === id ? updated : t)));
+      }),
+    );
   }
 
   deleteTask(id: string): Observable<void> {
-    this._tasks.update((tasks) => tasks.filter((t) => t.id !== id));
-    return of(void 0);
+    return this.http.delete<void>(`tasks/${id}`).pipe(
+      tap(() => {
+        this._tasks.update((tasks) => tasks?.filter((t) => t._id !== id));
+      }),
+    );
   }
 
   /**
    * Moves a task to a new status column, inserting before `beforeId` in the flat array.
    * Pass `beforeId = null` to append at the end of the target column.
+   * Uses optimistic update: applies the move instantly, rolls back on backend failure.
    */
   dropTask(id: string, targetStatus: Task['status'], insertBeforeId: string | null): void {
-    // `update()` receives the current array and expects the new array back
+    const previousTasks = this._tasks(); // snapshot for rollback
+
+    // Optimistically apply the move in-memory
     this._tasks.update((tasks) => {
-      // Find the task being dragged — bail out if it somehow doesn't exist
-      const task = tasks.find((t) => t.id === id);
+      const task = tasks.find((t) => t._id === id);
       if (!task) return tasks;
 
-      // Clone the task with its new status and a fresh timestamp
       const updated = { ...task, status: targetStatus, updatedAt: new Date().toISOString() };
-
-      // Remove the dragged task from its current position
-      const remaining = tasks.filter((t) => t.id !== id);
-
-      // Where to insert: before the anchor task, or at the end if dropped past all cards
+      const remaining = tasks.filter((t) => t._id !== id);
       const at = insertBeforeId
-        ? remaining.findIndex((t) => t.id === insertBeforeId)
+        ? remaining.findIndex((t) => t._id === insertBeforeId)
         : remaining.length;
 
-      // Rebuild the array: everything before `at`, then the moved task, then the rest
       return [...remaining.slice(0, at), updated, ...remaining.slice(at)];
     });
-  }
 
-  // Unique assignees derived from the in-memory task list
-  readonly users = computed<Assignee[]>(() => {
-    const seen = new Set<string>();
-    return this._tasks()
-      .filter((t) => {
-        if (seen.has(t.assignee.id)) return false;
-        seen.add(t.assignee.id);
-        return true;
-      })
-      .map((t) => t.assignee);
-  });
+    // Persist to backend — roll back on failure
+    this.updateTask(id, { status: targetStatus } as TaskFormData).subscribe({
+      error: () => {
+        console.error('Failed to persist task move — rolling back.');
+        this._tasks.set(previousTasks);
+      },
+    });
+  }
 }

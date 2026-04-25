@@ -8,7 +8,9 @@ import { Statistic } from './models';
   providedIn: 'root',
 })
 export class StatisticsService {
-  private _resource = httpResource<{ statistics: Statistic[] }>(() => 'statistics.json');
+  private _resource = httpResource<{ statistics: Statistic[] }>(
+    () => 'http://localhost:4200/statistics.json',
+  );
   private _simulatingLoad = toSignal(timer(1000).pipe(map(() => false)), { initialValue: true });
 
   readonly statistics = computed(() => this._resource.value()?.statistics ?? []);

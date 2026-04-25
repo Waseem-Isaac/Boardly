@@ -13,15 +13,10 @@
     </a>
   }
 
-  <a
-    [routerLink]="'/dashboard/tasks/add'"
-    class="m-4 nav-item btn-primary"
-    mat-list-item
-    mat-button
-  >
+  <button (click)="openAddTaskDialog()" class="m-4 nav-item btn-primary" mat-list-item mat-button>
     <span class="d-flex align-items-center justify-content-center">
       <mat-icon class="d-flex align-items-center justify-content-center">add</mat-icon>
       New Task
     </span>
-  </a>
+  </button>
 </mat-nav-list>

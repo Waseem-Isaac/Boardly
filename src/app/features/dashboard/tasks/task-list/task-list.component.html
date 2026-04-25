@@ -1,5 +1,6 @@
 <div class="tasks-list-container">
   <div class="task-list-header d-flex align-items-center justify-content-between mb-4">
+    <!-- Filter buttons group -->
     <div class="filter-group">
       <button
         class="btn btn-outline-primary"
@@ -31,6 +32,7 @@
       </button>
     </div>
 
+    <!-- Additional Filter options - DDLs and action button -->
     <div class="action-group d-flex align-items-center gap-3">
       <mat-form-field appearance="outline" subscriptSizing="dynamic" class="filter-select">
         <mat-select
@@ -52,18 +54,18 @@
           placeholder="Assignee"
         >
           <mat-option [value]="null">All Assignees</mat-option>
-          @for (assignee of assignees(); track assignee.id) {
-            <mat-option [value]="assignee.id">{{ assignee.name }}</mat-option>
+          @for (assignee of assignees(); track assignee._id) {
+            <mat-option [value]="assignee._id">{{ assignee.name }}</mat-option>
           }
         </mat-select>
       </mat-form-field>
 
-      <a [routerLink]="'/dashboard/tasks/add'" class="btn btn-primary">
+      <button class="btn btn-primary" (click)="openAddDialog()">
         <span class="d-flex align-items-center justify-content-center">
           <mat-icon class="d-flex align-items-center justify-content-center">add</mat-icon>
           New Task
         </span>
-      </a>
+      </button>
     </div>
   </div>
 
@@ -97,11 +99,12 @@
             </div>
           }
         } @else {
-          @for (task of filteredTasks() | filterByStatus: col.status; track task.id) {
+          @for (task of filteredTasks() | filterByStatus: col.status; track task._id) {
             <app-task-card
               cdkDrag
               [cdkDragData]="task"
               [task]="task"
+              (editRequested)="openEditDialog($event)"
               (deleteRequested)="handleDelete($event)"
             />
           }

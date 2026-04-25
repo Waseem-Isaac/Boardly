@@ -3,27 +3,36 @@
  * SMART component (loads data via TaskService)
  */
 import { Component, inject, OnInit } from '@angular/core';
-import { TaskService } from '../tasks/task.service';
+import { UsersService } from './users.service';
+import { MatIcon } from '@angular/material/icon';
+import { MatIconButton } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
+import { UserAddComponent } from './user-add/user-add.component';
+import { Confirmable } from '../../../shared/decorators/confirmable.decorator';
 
 @Component({
   selector: 'app-users',
-  imports: [],
+  imports: [MatIcon, MatIconButton],
   templateUrl: './users.component.html',
   styleUrl: './users.component.scss',
 })
 export class UsersComponent implements OnInit {
-  protected taskService = inject(TaskService);
+  protected usersService = inject(UsersService);
+  private dialog = inject(MatDialog);
 
   ngOnInit(): void {
-    this.taskService.loadTasks().subscribe();
+    this.usersService.loadUsers();
   }
 
-  getAvatarInitials(name: string): string {
-    return name
-      .split(' ')
-      .slice(0, 2)
-      .map((n) => n[0])
-      .join('')
-      .toUpperCase();
+  openAddUserDialog(): void {
+    this.dialog.open(UserAddComponent, { panelClass: 'task-dialog', disableClose: true });
+  }
+
+  @Confirmable({
+    title: 'Delete Member',
+    message: 'Are you sure you want to remove this team member?',
+  })
+  deleteUser(id: string): void {
+    this.usersService.deleteUser(id).subscribe();
   }
 }

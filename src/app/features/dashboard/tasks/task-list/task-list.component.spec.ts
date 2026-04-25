@@ -10,7 +10,7 @@ import { Task } from '../models';
 const mockAssignee = { id: 'u1', name: 'John Doe', avatar: '', email: 'john@test.com' };
 
 const makeTask = (overrides: Partial<Task> = {}): Task => ({
-  id: 'task-1',
+  _id: 'task-1',
   title: 'Test Task',
   description: 'Description',
   status: 'todo',
@@ -23,9 +23,9 @@ const makeTask = (overrides: Partial<Task> = {}): Task => ({
   ...overrides,
 });
 
-const todoTask = makeTask({ id: 't1', status: 'todo', title: 'Todo Item' });
-const inProgressTask = makeTask({ id: 't2', status: 'in_progress', title: 'In Progress Item' });
-const doneTask = makeTask({ id: 't3', status: 'done', title: 'Done Item' });
+const todoTask = makeTask({ _id: 't1', status: 'todo', title: 'Todo Item' });
+const inProgressTask = makeTask({ _id: 't2', status: 'in_progress', title: 'In Progress Item' });
+const doneTask = makeTask({ _id: 't3', status: 'done', title: 'Done Item' });
 
 describe('TaskListComponent', () => {
   let component: TaskListComponent;
@@ -90,8 +90,8 @@ describe('TaskListComponent', () => {
 
     it('should filter tasks by priority', () => {
       tasksSignal.set([
-        makeTask({ id: 'h1', priority: 'high', status: 'todo' }),
-        makeTask({ id: 'l1', priority: 'low', status: 'todo' }),
+        makeTask({ _id: 'h1', priority: 'high', status: 'todo' }),
+        makeTask({ _id: 'l1', priority: 'low', status: 'todo' }),
       ]);
       component.activePriority.set('high');
       fixture.detectChanges();
