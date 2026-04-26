@@ -3,28 +3,28 @@
     <!-- Filter buttons group -->
     <div class="filter-group">
       <button
-        class="btn btn-outline-primary"
+        class="btn btn-primary tab-btn"
         [class.active]="activeStatus() === null"
         (click)="setFilter(null)"
       >
         All
       </button>
       <button
-        class="btn btn-outline-primary"
+        class="btn btn-primary tab-btn"
         [class.active]="activeStatus() === 'todo'"
         (click)="setFilter('todo')"
       >
         To Do
       </button>
       <button
-        class="btn btn-outline-primary"
+        class="btn btn-primary tab-btn"
         [class.active]="activeStatus() === 'in_progress'"
         (click)="setFilter('in_progress')"
       >
         In Progress
       </button>
       <button
-        class="btn btn-outline-primary"
+        class="btn btn-primary tab-btn"
         [class.active]="activeStatus() === 'done'"
         (click)="setFilter('done')"
       >

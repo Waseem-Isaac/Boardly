@@ -18,10 +18,6 @@ module.exports = [
     ignores: ['**/*.spec.ts'],
     languageOptions: {
       parser: tsParser,
-      parserOptions: {
-        project: './tsconfig.app.json',
-        tsconfigRootDir: __dirname,
-      },
     },
     plugins: {
       '@typescript-eslint': tsPlugin,
@@ -54,10 +50,6 @@ module.exports = [
     files: ['**/*.spec.ts'],
     languageOptions: {
       parser: tsParser,
-      parserOptions: {
-        project: './tsconfig.spec.json',
-        tsconfigRootDir: __dirname,
-      },
     },
     plugins: {
       '@typescript-eslint': tsPlugin,

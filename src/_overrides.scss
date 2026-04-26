@@ -12,7 +12,7 @@ html {
   --mat-toolbar-container-background-color: var(--color-primary-contrast);
   --mat-sidenav-container-background-color: var(--color-primary-contrast);
   --mat-sidenav-content-background-color: var(--color-body-bg);
-  --mat-sys-corner-full: var(--radius-md) !important;
+  --mat-sys-corner-full: var(--radius-lg) !important;
 
   // Ensure Material surface tokens resolve to solid colours
   --mat-sys-surface: #ffffff;
@@ -36,7 +36,7 @@ html {
   --mat-form-field-outlined-outline-color: var(--color-light-grey);
   --mat-form-field-outlined-hover-outline-color: var(--color-light-grey);
   --mat-form-field-outlined-focus-outline-color: var(--color-primary);
-  --mat-form-field-outlined-container-shape: var(--radius-xl);
+  --mat-form-field-outlined-container-shape: var(--radius-lg);
   --mat-form-field-outlined-input-text-color: var(--color-dark);
   --mat-form-field-outlined-input-placeholder-color: var(--color-neutral);
 

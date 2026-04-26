@@ -43,20 +43,13 @@
         }
       }
 
-      button {
-        padding: 8px 16px;
-        font-size: 1rem;
-        // background-color: var(--color-primary);
-        background-color: var(--color-primary-contrast);
-        color: #000;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 0.83125rem;
+      button.tab-btn {
+        background: var(--color-primary-contrast) !important;
+        color: var(--color-dark) !important;
 
         &.active {
-          background-color: var(--color-primary);
-          color: var(--color-primary-contrast);
+          background: var(--color-primary) !important;
+          color: var(--color-primary-contrast) !important;
         }
       }
 
@@ -108,8 +101,9 @@
         }
 
         &.non-active-status-column {
-          background-color: var(--color-inactive);
-          opacity: 0.6;
+          visibility: hidden;
+          // background-color: var(--color-inactive);
+          // opacity: 0.6;
         }
 
         // CDK drop list states
