@@ -9,7 +9,7 @@ import { Statistic } from './models';
 })
 export class StatisticsService {
   private _resource = httpResource<{ statistics: Statistic[] }>(
-    () => 'http://localhost:4200/statistics.json',
+    () => `${window.location.origin}/statistics.json`,
   );
   private _simulatingLoad = toSignal(timer(1000).pipe(map(() => false)), { initialValue: true });
 
