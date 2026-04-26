@@ -1,9 +1,12 @@
 :root {
-  --color-primary: #1976d2;
+  --color-primary: #ea580c;
   --color-primary-contrast: #ffffff;
-  --color-body-bg: #f5f7fa;
+  --color-body-bg: #faf6f0;
+  --color-primary-active: #fef0e8;
+  --color-primary-hover: #fdf6f0;
+  --color-secondary-hover: #fad4bb;
   --color-dark: #212121;
-  --color-light-grey: #e0e0e0;
+  --color-light-grey: #ede5d8;
   --color-danger: #d32f2f;
   --color-success: #388e3c;
   --color-warning: #f57c00;
@@ -15,4 +18,7 @@
   --radius-lg: 8px;
   --radius-md: 4px;
   --radius-xl: 12px;
+
+  --mat-toolbar-standard-height: 64px;
+  --sidenav-width: 240px;
 }

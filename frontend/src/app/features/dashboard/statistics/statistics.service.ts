@@ -3,7 +3,7 @@ import { httpResource } from '@angular/common/http';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map, timer } from 'rxjs';
 import { Statistic } from './models';
-import { environment } from '../../../../environments/environment.production';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',

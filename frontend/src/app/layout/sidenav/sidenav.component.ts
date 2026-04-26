@@ -22,10 +22,10 @@ export class SidenavComponent {
   private dialog = inject(MatDialog);
 
   navItems = [
-    { label: 'Dashboard', route: '/dashboard', icon: '📊' },
-    { label: 'Tasks', route: '/dashboard/tasks', icon: '✅' },
-    { label: 'Analytics', route: '/dashboard/analytics', icon: '📈' },
-    { label: 'Team (Users)', route: '/dashboard/users', icon: '👥' },
+    { label: 'Dashboard', route: '/dashboard', iconPath: 'icons/sidenav/dashboard.svg' },
+    { label: 'Tasks', route: '/dashboard/tasks', iconPath: '✅' },
+    { label: 'Analytics', route: '/dashboard/analytics', iconPath: '📈' },
+    { label: 'Team (Users)', route: '/dashboard/users', iconPath: '👥' },
   ];
 
   openAddTaskDialog(): void {

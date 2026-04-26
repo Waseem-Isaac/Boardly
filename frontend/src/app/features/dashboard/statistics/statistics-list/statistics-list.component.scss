@@ -6,8 +6,8 @@
 
 .skeleton-stat-card {
   background: var(--color-primary-contrast);
-  border-radius: 8px;
-  padding: 1.75rem;
+  border-radius: var(--radius-lg);
+  padding: 2.4rem 1.75rem;
   box-shadow: 0px 4px 8px 0px #0000001f;
   display: flex;
   flex-direction: column;

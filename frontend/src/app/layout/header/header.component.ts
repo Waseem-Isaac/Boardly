@@ -2,7 +2,7 @@
  * Application header with search functionality and layout controls.
  * SMART component (manages search state via services)
  */
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -31,12 +31,17 @@ import { UsersService } from '../../features/dashboard/users/users.service';
   ],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
+  host: { '[class.sidenav-open]': 'sidenavOpen()' },
 })
 export class HeaderComponent {
   private searchService = inject(SearchService);
   protected layoutService = inject(LayoutService);
   protected authService = inject(AuthService);
   protected usersService = inject(UsersService);
+
+  readonly sidenavOpen = computed(
+    () => !this.layoutService.isMobile() || this.layoutService.sidenavOpen(),
+  );
 
   // Reflect the debounced signal back for the clear-button visibility check
   readonly searchTerm = this.searchService.searchTerm;

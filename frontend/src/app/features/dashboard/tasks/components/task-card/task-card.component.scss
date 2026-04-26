@@ -2,15 +2,18 @@
   display: block;
 
   .task-card {
-    background: transparent;
+    background: var(--color-body-bg);
     border: 1px solid var(--color-light-grey);
     border-radius: 8px;
     padding: 1rem;
     margin-bottom: 1rem;
-
     &.overdue {
       background-color: var(--color-badge-risk);
       border-left: 0.25rem solid var(--color-danger);
+    }
+    &:hover {
+      border-color: var(--color-secondary-hover);
+      box-shadow: 0px 2px 4px 0px #fef0e8;
     }
   }
 

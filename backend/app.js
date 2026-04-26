@@ -13,10 +13,8 @@ const isAuthenticated = require('./middleware/isAuthenticated');
 
 const app = express();
 
-const allowedOrigin = (process.env.CLIENT_URL || '').trim().replace(/\/$/, '');
-
 const corsOptions = {
-  origin: allowedOrigin,
+  origin: (process.env.CLIENT_URL || '').trim().replace(/\/$/, ''),
   allowedHeaders: ['Content-Type', 'Authorization'],
   methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
 };
