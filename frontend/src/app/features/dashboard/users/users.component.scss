@@ -8,6 +8,50 @@
     margin-bottom: 1.5rem;
   }
 
+  .search-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    background: var(--color-primary-contrast);
+    border: 1px solid var(--color-light-grey);
+    border-radius: var(--radius-lg);
+    padding: 0 0.5rem;
+    height: 38px;
+
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+      color: var(--color-neutral);
+      flex-shrink: 0;
+    }
+
+    input {
+      border: none;
+      outline: none;
+      background: transparent;
+      font-size: 0.875rem;
+      color: var(--color-dark);
+      width: 200px;
+
+      &::placeholder {
+        color: var(--color-neutral);
+      }
+    }
+
+    .clear-btn {
+      width: 24px;
+      height: 24px;
+      line-height: 24px;
+
+      mat-icon {
+        font-size: 14px;
+        width: 14px;
+        height: 14px;
+      }
+    }
+  }
+
   .users-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -28,7 +72,7 @@
     min-height: 72px;
 
     &:hover {
-      transform: translateY(-2px);
+      transform: translateY(-1px);
     }
 
     .delete-btn {
@@ -63,6 +107,66 @@
         #fff 50%,
         var(--color-light-grey) 75%
       );
+    }
+
+    &.inactive {
+      background: var(--color-inactive);
+      border-color: #e0e0e0;
+      opacity: 0.75;
+
+      .user-avatar {
+        filter: grayscale(1);
+      }
+
+      .user-name {
+        color: var(--color-neutral);
+      }
+    }
+  }
+
+  .inactive-badge {
+    position: absolute;
+    bottom: 6px;
+    right: 8px;
+    font-size: 0.6rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--color-neutral);
+    background: #e0e0e0;
+    border-radius: 4px;
+    padding: 1px 6px;
+  }
+
+  .section-divider {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 1.5rem 0 1rem;
+    color: var(--color-dark);
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+  }
+
+  .inactive-hint {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    padding: 0.5rem 0.75rem;
+    background: #fff8e1;
+    border: 1px solid #ffe082;
+    border-radius: var(--radius-md);
+    color: #795548;
+    font-size: 0.8rem;
+
+    mat-icon {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+      color: var(--color-warning);
+      flex-shrink: 0;
     }
   }
 

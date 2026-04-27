@@ -33,7 +33,11 @@ body {
   border-radius: var(--radius-lg);
   border: none;
   cursor: pointer;
+  transition: all 0.3s ease;
 
+  &:hover {
+    background-color: var(--color-primary-hover) !important;
+  }
   &:disabled {
     opacity: 0.6;
     cursor: not-allowed;

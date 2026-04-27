@@ -1,14 +1,25 @@
 <div class="users-page">
-  <div class="page-header d-flex align-items-center justify-content-between">
-    <h2 class="page-title"></h2>
-    <button class="btn btn-primary" (click)="openAddUserDialog()">
-      <span class="d-flex align-items-center justify-content-center gap-1">
-        <mat-icon class="d-flex align-items-center justify-content-center mx-2"
-          >person_add</mat-icon
-        >
-        Add User
-      </span>
-    </button>
+  <div class="page-header d-flex align-items-center justify-content-between mb-5">
+      <div class="search-bar">
+        <mat-icon>search</mat-icon>
+        <input
+          type="text"
+          placeholder="Search members…"
+          [(ngModel)]="searchTerm"
+          [ngModelOptions]="{standalone: true}"
+        />
+        @if (searchTerm()) {
+          <button mat-icon-button class="clear-btn" (click)="searchTerm.set('')">
+            <mat-icon>close</mat-icon>
+          </button>
+        }
+      </div>
+      <button class="btn btn-primary" (click)="openAddUserDialog()">
+        <span class="d-flex align-items-center justify-content-center gap-1">
+          <mat-icon class="d-flex align-items-center justify-content-center mx-2">person_add</mat-icon>
+          Add User
+        </span>
+      </button>
   </div>
 
   @if (usersService.isLoading()) {
@@ -19,7 +30,7 @@
     </div>
   } @else {
     <div class="users-grid">
-      @for (user of usersService.users(); track user._id) {
+      @for (user of activeUsers(); track user._id) {
         <div class="user-card">
           <button class="delete-btn" mat-icon-button (click)="deleteUser(user._id!)">
             <mat-icon>close</mat-icon>
@@ -32,5 +43,30 @@
         </div>
       }
     </div>
+
+    @if (inactiveUsers().length) {
+      <div class="section-divider">
+        <span>Inactive Members ({{ inactiveUsers().length }})</span>
+      </div>
+      <div class="inactive-hint">
+        <mat-icon>info</mat-icon>
+        <span>These members haven't activated their accounts yet. They should check their inbox and set a password to become active.</span>
+      </div>
+      <div class="users-grid">
+        @for (user of inactiveUsers(); track user._id) {
+          <div class="user-card inactive">
+            <button class="delete-btn" mat-icon-button (click)="deleteUser(user._id!)">
+              <mat-icon>close</mat-icon>
+            </button>
+            <div class="user-avatar lg">{{ usersService.getAvatarInitials(user.name) }}</div>
+            <div class="user-info">
+              <span class="user-name">{{ user.name }}</span>
+              <span class="user-email">{{ user.email }}</span>
+            </div>
+            <span class="inactive-badge">Inactive</span>
+          </div>
+        }
+      </div>
+    }
   }
 </div>

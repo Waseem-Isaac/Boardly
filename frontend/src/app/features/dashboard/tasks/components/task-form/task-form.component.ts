@@ -53,6 +53,7 @@ export class TaskFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.initForm();
+    this.usersService.loadUsers(true);
   }
 
   private initForm(): void {

@@ -42,7 +42,7 @@ import { UsersService } from '../../users/users.service';
 })
 export class TaskListComponent implements OnInit {
   private taskService = inject(TaskService);
-  private usersService = inject(UsersService);
+  protected usersService = inject(UsersService);
   private searchService = inject(SearchService);
   private dialog = inject(MatDialog);
 
@@ -57,6 +57,7 @@ export class TaskListComponent implements OnInit {
   ngOnInit(): void {
     // Trigger initial HTTP load (no-op if already loaded)
     this.taskService.loadTasks().subscribe();
+    this.usersService.loadUsers(true);
   }
 
   filteredTasks = computed(() => {
@@ -113,6 +114,4 @@ export class TaskListComponent implements OnInit {
       ]?._id ?? null;
     this.taskService.dropTask(task._id, targetStatus, insertBeforeId);
   }
-
-  assignees = this.usersService.users;
 }

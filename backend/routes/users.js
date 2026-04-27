@@ -3,10 +3,12 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/user');
 
-// GET all users
+// GET all users (optionally filter by ?active=true)
 router.get('/', async (req, res, next) => {
   try {
-    const users = await User.find();
+    const filter = {};
+    if (req.query.active === 'true') filter.active = true;
+    const users = await User.find(filter);
     res.json({ users, meta: { totalCount: users.length } });
   } catch (err) {
     next(err);

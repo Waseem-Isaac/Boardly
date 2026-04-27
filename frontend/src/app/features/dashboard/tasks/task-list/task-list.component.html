@@ -54,7 +54,7 @@
           placeholder="Assignee"
         >
           <mat-option [value]="null">All Assignees</mat-option>
-          @for (assignee of assignees(); track assignee._id) {
+          @for (assignee of usersService.users(); track assignee._id) {
             <mat-option [value]="assignee._id">{{ assignee.name }}</mat-option>
           }
         </mat-select>

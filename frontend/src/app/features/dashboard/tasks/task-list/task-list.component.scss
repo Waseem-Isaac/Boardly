@@ -57,6 +57,13 @@
           background: var(--color-primary) !important;
           color: var(--color-primary-contrast) !important;
         }
+      
+         &:hover:not(.active) {
+          background: var(--sidenav-item-color-hover) !important;
+          color: var(--color-primary) !important;
+        }
+      
+      
       }
 
       @media screen and (max-width: 992px) {

@@ -45,18 +45,18 @@
   //   }
   // }
 
-  @media screen and (max-width: 576px) {
-    mat-toolbar {
-      flex-wrap: wrap;
-      height: auto;
-      gap: 1rem;
-      padding: 1rem;
+  // @media screen and (max-width: 576px) {
+  //   mat-toolbar {
+  //     flex-wrap: wrap;
+  //     height: auto;
+  //     gap: 1rem;
+  //     padding: 1rem;
 
-      .search-field {
-        max-width: 90%;
-      }
-    }
-  }
+  //     .search-field {
+  //       max-width: 90%;
+  //     }
+  //   }
+  // }
 }
 
 .page-title {

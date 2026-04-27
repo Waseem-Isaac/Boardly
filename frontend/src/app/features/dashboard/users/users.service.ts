@@ -1,12 +1,13 @@
 // Users Service
 import { Injectable, inject, signal } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 
 export interface User {
   _id?: string;
   name: string;
   email: string;
+  active?: boolean;
 }
 
 @Injectable({
@@ -19,8 +20,9 @@ export class UsersService {
   readonly users = this._users.asReadonly();
   readonly isLoading = signal(true);
 
-  loadUsers(): void {
-    this.http.get<{ users: User[] }>('users').subscribe({
+  loadUsers(active?: boolean): void {
+    const params = active === true ? new HttpParams().set('active', 'true') : new HttpParams();
+    this.http.get<{ users: User[] }>('users', { params }).subscribe({
       next: (data) => {
         this._users.set(data.users);
         this.isLoading.set(false);
