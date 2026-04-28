@@ -36,12 +36,12 @@ jobs:
         run: npm run build -- --base-href=/${{ github.event.repository.name }}/
 
       - name: Fix SPA routing
-        run: cp dist/task-management-dashboard/browser/index.html dist/task-management-dashboard/browser/404.html
+        run: cp dist/boardly/browser/index.html dist/boardly/browser/404.html
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: frontend/dist/task-management-dashboard/browser
+          folder: frontend/dist/boardly/browser
           branch: gh-pages
           clean: true
           token: ${{ secrets.GITHUB_TOKEN }}
