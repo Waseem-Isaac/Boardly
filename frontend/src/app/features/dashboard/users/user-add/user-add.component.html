@@ -2,7 +2,7 @@
 
 <mat-dialog-content>
   @if (errorMessage()) {
-    <div class="error-banner">{{ errorMessage() }}</div>
+    <div class="error-banner" role="alert">{{ errorMessage() }}</div>
   }
 
   <form [formGroup]="form" (ngSubmit)="onSubmit()" class="user-form">

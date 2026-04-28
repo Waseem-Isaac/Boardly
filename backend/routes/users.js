@@ -22,18 +22,25 @@ router.post('/', async (req, res, next) => {
   try {
     const { name, email } = req.body;
 
+    const normalizedEmail = email.trim().toLowerCase();
+
+    const existing = await User.findOne({ email: normalizedEmail });
+    if (existing) {
+      return res.status(409).json({ message: 'Email already in use' });
+    }
+
     // Generate a secure random invitation token (plain sent via email, hash stored in DB)
     const plainToken  = crypto.randomBytes(32).toString('hex');
     const hashedToken = crypto.createHash('sha256').update(plainToken).digest('hex');
 
     const user = await User.create({
       name,
-      email,
+      email: normalizedEmail,
       invitationToken: hashedToken,
     });
 
     // Send invitation email with the plain token
-    await sendInvitationEmail(email, plainToken);
+    await sendInvitationEmail(normalizedEmail, plainToken);
 
     res.status(201).json(user);
   } catch (err) {

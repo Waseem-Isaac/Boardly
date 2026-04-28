@@ -41,7 +41,6 @@ export class SetPasswordComponent implements OnInit {
 
   token = signal<string | null>(null);
   invitedName = signal<string>('');
-  invitedEmail = signal<string>('');
 
   isValidating = signal(false);
   tokenError = signal('');
@@ -68,7 +67,6 @@ export class SetPasswordComponent implements OnInit {
     this.authService.validateInvitation(token).subscribe({
       next: (data) => {
         this.invitedName.set(data.name);
-        this.invitedEmail.set(data.email);
         this.isValidating.set(false);
       },
       error: () => {
@@ -104,7 +102,7 @@ export class SetPasswordComponent implements OnInit {
     const { password } = this.form.value;
 
     this.authService.setPassword(this.token()!, password!).subscribe({
-      next: () => this.router.navigate(['/dashboard']),
+      next: () => this.router.navigate(['/auth/login']),
       error: () => {
         this.errorMessage.set('Failed to set password. Please try again.');
         this.isSubmitting.set(false);

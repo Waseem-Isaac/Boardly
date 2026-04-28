@@ -56,7 +56,7 @@ export class UserAddComponent {
       },
       error: (err) => {
         console.error('Error creating user:', err);
-        this.errorMessage.set('Failed to create user. Please try again.');
+        this.errorMessage.set(err?.error?.message || 'Failed to create user. Please try again.');
         this.isSubmitting.set(false);
       },
       complete: () => this.isSubmitting.set(false),
