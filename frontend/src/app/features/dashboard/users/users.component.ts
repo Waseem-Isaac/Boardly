@@ -10,6 +10,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { UserAddComponent } from './user-add/user-add.component';
 import { Confirmable } from '../../../shared/decorators/confirmable.decorator';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-users',
@@ -22,6 +23,7 @@ export class UsersComponent implements OnInit {
   private dialog = inject(MatDialog);
 
   protected searchTerm = signal('');
+  authService = inject(AuthService);
 
   private matchesSearch(name: string): boolean {
     const q = this.searchTerm().toLowerCase().trim();

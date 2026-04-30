@@ -68,7 +68,7 @@ export class TaskListComponent implements OnInit {
     return this.tasks()?.filter((t) => {
       if (status && t.status !== status) return false;
       if (priority && t.priority !== priority) return false;
-      if (assignee && t.assignee._id !== assignee) return false;
+      if (assignee && t.assignee?._id !== assignee) return false;
       if (query) {
         const inTitle = t.title.toLowerCase().includes(query);
         const inDescription = t.description.toLowerCase().includes(query);

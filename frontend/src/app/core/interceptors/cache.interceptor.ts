@@ -15,7 +15,7 @@ export function invalidateCache(urlPrefix: string): void {
 }
 
 export const cacheInterceptor: HttpInterceptorFn = (req, next) => {
-  if (req.method !== 'GET') {
+  if (req.method !== 'GET' || req.headers.get('invalidateCache') === 'true') {
     return next(req);
   }
 

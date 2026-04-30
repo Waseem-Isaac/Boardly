@@ -8,6 +8,8 @@ import { cacheInterceptor } from './core/interceptors/cache.interceptor';
 import { baseUrlInterceptor } from './core/interceptors/base-url.interceptor';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
+import { OVERLAY_DEFAULT_CONFIG } from '@angular/cdk/overlay';
+import { MatDatepickerIntl } from '@angular/material/datepicker';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -16,5 +18,14 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withInterceptors([baseUrlInterceptor, authInterceptor, cacheInterceptor])),
     provideCharts(withDefaultRegisterables()),
     provideNativeDateAdapter(),
+    {
+      provide: MatDatepickerIntl,
+      useFactory: () => {
+        const intl = new MatDatepickerIntl();
+        intl.prevMonthLabel = '';
+        intl.nextMonthLabel = '';
+        return intl;
+      }
+    }
   ],
 };

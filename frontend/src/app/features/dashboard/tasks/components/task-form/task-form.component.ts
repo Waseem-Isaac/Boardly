@@ -11,6 +11,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { Task, TaskFormData } from '../../models';
 import { UsersService } from '../../../users/users.service';
+import { AuthService } from '../../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-task-form',
@@ -31,6 +32,7 @@ export class TaskFormComponent implements OnInit {
   @Input() submitButtonText = 'Submit';
   @Output() formSubmit = new EventEmitter<TaskFormData>();
   @Output() formCancel = new EventEmitter<void>();
+  authService = inject(AuthService);
   today = new Date();
   taskForm!: FormGroup;
   // Prefer using the inject() function over constructor parameter injection. Use Angular's migration schematic to automatically refactor: ng generate @angular/core:injecteslint@angular-eslint/prefer-inject
@@ -60,13 +62,13 @@ export class TaskFormComponent implements OnInit {
     this.taskForm = this.fb.group({
       title: [this.task?.title || '', [Validators.required, Validators.minLength(3)]],
       description: [this.task?.description || '', [Validators.required]],
-      status: [this.task?.status, [Validators.required]],
+      status: [this.task?.status || 'todo', [Validators.required]],
       priority: [this.task?.priority, [Validators.required]],
       dueDate: [
         this.task?.dueDate ? new Date(this.task.dueDate + 'T00:00:00') : null,
         [Validators.required],
       ],
-      assignee: [this.task?.assignee?._id || null, [Validators.required]],
+      assignee: [this.task?.assignee?._id || this.authService.currentUser()?._id, [Validators.required]],
       tags: [this.task?.tags || []],
     });
 

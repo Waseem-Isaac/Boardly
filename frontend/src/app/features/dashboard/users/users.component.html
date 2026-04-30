@@ -32,10 +32,13 @@
     <div class="users-grid">
       @for (user of activeUsers(); track user._id) {
         <div class="user-card">
-          <button class="delete-btn" mat-icon-button (click)="deleteUser(user._id!)">
-            <mat-icon>close</mat-icon>
-          </button>
-          <div class="user-avatar lg">{{ usersService.getAvatarInitials(user.name) }}</div>
+          @if(user._id !== authService.currentUser()?._id) {
+             <button class="delete-btn" mat-icon-button (click)="deleteUser(user._id!)">
+              <mat-icon>close</mat-icon>
+            </button>
+          }
+         
+          <div class="user-avatar lg" [style.background]="usersService.getAvatarColor(user.name)">{{ usersService.getAvatarInitials(user.name) }}</div>
           <div class="user-info">
             <span class="user-name">{{ user.name }}</span>
             <span class="user-email">{{ user.email }}</span>
@@ -58,7 +61,7 @@
             <button class="delete-btn" mat-icon-button (click)="deleteUser(user._id!)">
               <mat-icon>close</mat-icon>
             </button>
-            <div class="user-avatar lg">{{ usersService.getAvatarInitials(user.name) }}</div>
+            <div class="user-avatar lg" [style.background]="usersService.getAvatarColor(user.name)">{{ usersService.getAvatarInitials(user.name) }}</div>
             <div class="user-info">
               <span class="user-name">{{ user.name }}</span>
               <span class="user-email">{{ user.email }}</span>

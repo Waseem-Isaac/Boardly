@@ -52,6 +52,7 @@
       button.tab-btn {
         background: var(--color-primary-contrast) !important;
         color: var(--color-dark) !important;
+        box-shadow: none;
 
         &.active {
           background: var(--color-primary) !important;

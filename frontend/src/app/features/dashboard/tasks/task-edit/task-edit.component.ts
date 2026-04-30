@@ -35,7 +35,7 @@ export class TaskEditComponent implements OnInit {
   }
 
   private loadTask(id: string): void {
-    this.taskService.getTaskById(id).subscribe({
+    this.taskService.getTaskById(id, true).subscribe({
       next: (task) => {
         if (task) {
           this.task.set(task);

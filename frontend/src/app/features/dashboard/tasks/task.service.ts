@@ -33,14 +33,14 @@ export class TaskService {
     );
   }
 
-  getTaskById(id: string): Observable<Task | undefined> {
-    return this.http.get<Task>(`tasks/${id}`).pipe(map((task) => task || undefined));
+  getTaskById(id: string, invalidateCache: boolean = false): Observable<Task | undefined> {
+    return this.http.get<Task>(`tasks/${id}`, { headers: { invalidateCache: invalidateCache.toString() } }).pipe(map((task) => task || undefined));
   }
 
   createTask(taskData: TaskFormData): Observable<Task> {
     return this.http.post<Task>(`tasks`, taskData).pipe(
       tap((created) => {
-        this._tasks.update((tasks) => [created, ...(tasks ?? [])]);
+        this._tasks.update((tasks) => [...(tasks ?? []) , created]);
       }),
     );
 

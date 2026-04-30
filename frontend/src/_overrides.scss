@@ -25,10 +25,15 @@ html {
   --mat-sys-on-error: #ffffff;
 
   // Form field outlined tokens
-  @include mat.form-field-overrides();
-  // --mat-form-field-container-height: 42px;
-  // --mat-form-field-filled-with-label-container-padding-top: 0.625rem;
-  // --mat-form-field-filled-with-label-container-padding-bottom: 0.625rem;
+  @include mat.form-field-overrides(
+    (container-height: 40px,
+      container-vertical-padding: 8px,
+      enabled-select-arrow-color: var(--color-primary),
+      container-text-size: 0.8rem,
+      subscript-text-size: 0.6rem
+    )
+  );
+
   --mat-form-field-outlined-error-outline-color: var(--color-danger);
   --mat-form-field-outlined-error-outline-background-color: var(--color-danger);
   --mat-form-field-outlined-error-focus-outline-color: var(--color-danger);
@@ -40,6 +45,11 @@ html {
   --mat-form-field-outlined-input-text-color: var(--color-dark);
   --mat-form-field-outlined-input-placeholder-color: var(--color-neutral);
 
+  --mat-select-placeholder-text-color: var(--color-neutral);
+  --mat-select-trigger-text-size: 0.8rem;
+  --mat-select-enabled-trigger-text-color: var(--color-dark);
+
+
   .mat-mdc-notch-piece {
     // background-color: var(--color-body-bg);
     background-color: var(--color-primary-contrast);
@@ -48,15 +58,21 @@ html {
   .mat-mdc-form-field-infix {
     z-index: 9999;
   }
+
+  .field label {
+    font-size: 0.8rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .mat-mdc-form-field-bottom-align::before {
+    height: 0.8rem;
+  }
+  .mat-mdc-form-field-error-wrapper {
+    padding: 0;
+  }
 }
 
 // ─── Angular Material — component overrides ──────────────────────────────────
-
-// Mat-select placeholder colour
-.mat-mdc-select-placeholder {
-  color: var(--color-neutral) !important;
-}
-
 // Datepicker: visually disabled past dates (min date constraint)
 .mat-calendar-body-disabled {
   > .mat-calendar-body-cell-content:not(.mat-calendar-body-selected) {
@@ -64,6 +80,18 @@ html {
     cursor: not-allowed;
   }
 }
+
+
+// Mat-Datepicker overrides
+.mat-datepicker-content {
+  border: 1px solid var(--color-light-grey);
+}
+
+.mat-calendar .mat-icon-button .mat-tooltip,
+.mat-calendar-period-button ~ .mat-tooltip {
+  display: none !important;
+}
+
 
 // ─── CDK Drag and Drop ───────────────────────────────────────────────────────
 
@@ -118,13 +146,5 @@ html {
   .mat-mdc-dialog-content {
     // padding: 0 !important;
     padding: 1rem 2rem !important;
-  }
-
-  // -- Action bar (mat-dialog-actions) --
-  .mat-mdc-dialog-actions {
-    // padding:
-    // border-top:
-    // justify-content:
-    // gap:
   }
 }

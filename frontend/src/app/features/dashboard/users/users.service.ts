@@ -2,12 +2,19 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
+import { AuthService } from '../../../core/services/auth.service';
 
 export interface User {
-  _id?: string;
+  _id: string;
   name: string;
   email: string;
   active?: boolean;
+}
+
+export interface UserFormData {
+  name: string;
+  email: string;
+  password: string;
 }
 
 @Injectable({
@@ -15,7 +22,7 @@ export interface User {
 })
 export class UsersService {
   private http = inject(HttpClient);
-
+  authService = inject(AuthService);
   private _users = signal<User[]>([]);
   readonly users = this._users.asReadonly();
   readonly isLoading = signal(true);
@@ -24,6 +31,13 @@ export class UsersService {
     const params = active === true ? new HttpParams().set('active', 'true') : new HttpParams();
     this.http.get<{ users: User[] }>('users', { params }).subscribe({
       next: (data) => {
+        // intercept users to mark the current user for easier template handling (e.g. disable delete button)
+        data.users.forEach((u) => {
+          if (u._id === this.authService.currentUser()?._id && !u.name.endsWith('(Me)')) {
+            u.name = u.name + ' (Me)';
+          }
+        });
+
         this._users.set(data.users);
         this.isLoading.set(false);
       },
@@ -34,7 +48,7 @@ export class UsersService {
     return this.http.get<User>(`users/${id}`);
   }
 
-  addUser(userData: User): Observable<User> {
+  addUser(userData: UserFormData): Observable<User> {
     return this.http
       .post<User>('users', userData)
       .pipe(tap((created) => this._users.update((u) => [...u, created])));
@@ -46,7 +60,8 @@ export class UsersService {
       .pipe(tap(() => this._users.update((u) => u.filter((user) => user._id !== id))));
   }
 
-  getAvatarInitials(name: string): string {
+  getAvatarInitials(name?: string): string {
+    if (!name) return '?';
     return name
       .split(' ')
       .slice(0, 2)
@@ -54,4 +69,23 @@ export class UsersService {
       .join('')
       .toUpperCase();
   }
+
+  /**
+  * Hashes a string to a consistent HSL color.
+  */
+  getAvatarColor(name?: string): string {
+    if (!name) return 'var(--color-neutral)';
+    let hash = 0;
+    for (let i = 0; i < name.length; i++) {
+      hash = name.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    const hue = Math.abs(hash) % 360;
+    return `hsl(${hue}, 60%, 70%)`;
+  }
+
+  isItMe(userId: string): boolean {
+    return userId === this.authService.currentUser()?._id;
+  }
+  
 }
+

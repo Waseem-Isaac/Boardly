@@ -151,13 +151,11 @@ app-set-password {
       .fields {
         display: flex;
         flex-direction: column;
-        gap: 14px;
         flex: 1;
 
         .field {
           display: flex;
           flex-direction: column;
-          gap: 5px;
         }
       }
 
@@ -169,6 +167,7 @@ app-set-password {
         height: 56px;
         font-size: 1rem;
         font-weight: bold;
+        margin-top: 1rem;
       }
 
       .error-banner {

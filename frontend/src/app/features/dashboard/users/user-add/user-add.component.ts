@@ -4,7 +4,7 @@ import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { UsersService, User } from '../users.service';
+import { UsersService, UserFormData } from '../users.service';
 
 @Component({
   selector: 'app-user-add',
@@ -50,7 +50,7 @@ export class UserAddComponent {
     this.isSubmitting.set(true);
     this.errorMessage.set('');
 
-    this.usersService.addUser(this.form.value as User).subscribe({
+    this.usersService.addUser(this.form.value as UserFormData).subscribe({
       next: () => {
         this.dialogRef.close(true);
       },
