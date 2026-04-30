@@ -1,7 +1,10 @@
-<div class="task-card" [ngClass]="{ overdue: isOverdue(task()) }">
+<div class="task-card" [ngClass]="{ overdue: isOverdue(task()) }" >
   <!-- 1. Priority badge + actions -->
   <div class="card-header d-flex align-items-center justify-content-between mb-2">
-    <span class="priority-badge priority-{{ task().priority }}">{{ task().priority }}</span>
+    <div class="d-flex align-items-center">
+      <ng-content></ng-content>
+      <span class="priority-badge priority-{{ task().priority }}">{{ task().priority }}</span>
+    </div>
 
     <!-- use mat-menu for actions, menu item will be the 3 veritcal dots -->
     <div class="actions">

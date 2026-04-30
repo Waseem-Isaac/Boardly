@@ -18,7 +18,7 @@
         gap: 0.5rem;
 
 
-         border-radius: var(--radius-lg);
+        border-radius: var(--radius-lg);
         background-color: var(--color-primary-contrast);
         padding: 0.2rem;
         border: 1px solid var(--color-light-grey);
@@ -32,16 +32,19 @@
           .mat-mdc-text-field-wrapper {
             padding: 0 8px;
           }
+
           .mat-mdc-form-field-infix {
             padding-top: 7px;
             padding-bottom: 7px;
             min-height: unset;
           }
+
           .mdc-text-field--outlined .mdc-notched-outline__leading,
           .mdc-text-field--outlined .mdc-notched-outline__trailing,
           .mdc-text-field--outlined .mdc-notched-outline__notch {
             border-color: var(--color-light-grey);
           }
+
           .mat-mdc-select-placeholder,
           .mat-mdc-select-value-text {
             font-size: 0.875rem;
@@ -58,13 +61,13 @@
           background: var(--color-primary) !important;
           color: var(--color-primary-contrast) !important;
         }
-      
-         &:hover:not(.active) {
+
+        &:hover:not(.active) {
           background: var(--sidenav-item-color-hover) !important;
           color: var(--color-primary) !important;
         }
-      
-      
+
+
       }
 
       @media screen and (max-width: 992px) {
@@ -90,6 +93,7 @@
         // box-shadow: 0px 2px 4px 0px #00000014;
         border: 1px solid var(--color-light-grey);
         min-height: 60vh;
+
         .column-header {
           display: flex;
           justify-content: space-between;
@@ -97,11 +101,13 @@
           padding-bottom: 0.5rem;
           border-bottom: 1px solid var(--color-light-grey);
           margin-bottom: 1rem;
+
           .column-title,
           .task-count {
             font-size: 0.875rem;
             font-weight: bold;
           }
+
           .task-count.badge {
             background-color: var(--color-light-grey);
             padding: 0.3rem;
@@ -117,6 +123,11 @@
 
         &.non-active-status-column {
           visibility: hidden;
+          @media screen and (max-width: 992px) {
+                          display: none !important;
+  
+          }
+          
           // background-color: var(--color-inactive);
           // opacity: 0.6;
         }
@@ -126,18 +137,6 @@
           background-color: rgba(25, 118, 210, 0.05);
           outline: 2px dashed var(--color-primary);
           outline-offset: -2px;
-        }
-
-        &.cdk-drop-list-dragging {
-          background-color: rgba(25, 118, 210, 0.03);
-        }
-
-        // Drag cursor on cards
-        ::ng-deep app-task-card {
-          cursor: grab;
-          &:active {
-            cursor: grabbing;
-          }
         }
       }
 
@@ -162,14 +161,17 @@
     width: 60px;
     border-radius: 12px;
   }
+
   .skeleton-title {
     height: 16px;
     width: 80%;
   }
+
   .skeleton-desc {
     height: 13px;
     width: 100%;
   }
+
   .skeleton-desc.short {
     width: 60%;
   }
@@ -184,5 +186,26 @@
     height: 30px;
     width: 50%;
     border-radius: 14px;
+  }
+}
+
+
+.task-drag-handle .drag-btn {
+  cursor: grab;
+
+  &:active {
+    cursor: grabbing;
+  }
+
+  background: transparent !important;
+  border: none !important;
+  color: var(--color-neutral);
+  padding: 0;
+
+  mat-icon {
+    font-size: 1rem;
+    width: auto;
+    display: flex;
+    align-items: center;
   }
 }

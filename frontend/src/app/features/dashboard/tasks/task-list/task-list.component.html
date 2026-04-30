@@ -106,7 +106,17 @@
               [task]="task"
               (editRequested)="openEditDialog($event)"
               (deleteRequested)="handleDelete($event)"
-            />
+            >
+
+
+             <div class="task-drag-handle" cdkDragHandle>
+              <button mat-icon-button aria-label="Drag task" class="drag-btn">
+                <mat-icon>drag_indicator</mat-icon>
+              </button>
+            </div>
+
+
+          </app-task-card>
           }
         }
       </div>
