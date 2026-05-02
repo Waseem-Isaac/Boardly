@@ -24,11 +24,13 @@ export interface RegisterRequest {
   name: string;
   email: string;
   password: string;
+  confirmPassword: string;
 }
 
 export interface SetPasswordRequest {
   token: string;
   password: string;
+  confirmPassword?: string; // TODO: postponed
 }
 
 @Injectable({ providedIn: 'root' })
@@ -49,9 +51,9 @@ export class AuthService {
       .pipe(tap((res) => this._persist(res)));
   }
 
-  register(name: string, email: string, password: string): Observable<AuthResponse> {
+  register(user: RegisterRequest): Observable<AuthResponse> {
     return this.http
-      .post<AuthResponse>('auth/register', { name, email, password } satisfies RegisterRequest)
+      .post<AuthResponse>('auth/register', user)
       .pipe(tap((res) => this._persist(res)));
   }
 
@@ -61,9 +63,9 @@ export class AuthService {
     });
   }
 
-  setPassword(token: string, password: string): Observable<AuthResponse> {
+  setPassword(token: string, password: string, confirmPassword: string): Observable<AuthResponse> {
     return this.http
-      .post<AuthResponse>('auth/set-password', { token, password } satisfies SetPasswordRequest)
+      .post<AuthResponse>('auth/set-password', { token, password, confirmPassword } satisfies SetPasswordRequest)
       .pipe(tap((res) => this._persist(res)));
   }
 

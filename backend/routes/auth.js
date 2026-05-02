@@ -8,14 +8,18 @@ const User = require('../models/user');
 // POST /auth/register — self-registration with password
 router.post('/register', async (req, res, next) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, confirmPassword } = req.body;
 
-    if (!name || !email || !password) {
-      return res.status(400).json({ message: 'name, email, and password are required' });
+    if (!name || !email || !password || !confirmPassword) {
+      return res.status(400).json({ message: 'name, email, password, and confirmPassword are required' });
     }
 
     if (password.length < 6) {
       return res.status(400).json({ message: 'Password must be at least 8 characters' });
+    }
+
+    if (confirmPassword !== password) {
+      return res.status(400).json({ message: 'Passwords do not match' });
     }
 
     const normalizedEmail = email.trim().toLowerCase();
@@ -123,12 +127,15 @@ router.get('/validate-invitation', async (req, res, next) => {
 // POST /auth/set-password — set password and activate account using invitation token, and new password in body
 router.post('/set-password', async (req, res, next) => {
   try {
-    const { token, password } = req.body;
-    if (!token || !password) {
-      return res.status(400).json({ message: 'Invitation token and new password are required' });
-    } 
+    const { token, password, confirmPassword } = req.body;
+    if (!token || !password || !confirmPassword) {
+      return res.status(400).json({ message: 'Invitation token, password, and confirmPassword are required' });
+    }
     if (password.length < 6) {
       return res.status(400).json({ message: 'Password must be at least 8 characters' });
+    }
+    if (confirmPassword !== password) {
+      return res.status(400).json({ message: 'Passwords do not match' });
     }
     const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
     const user = await User.findOne({ invitationToken: hashedToken });

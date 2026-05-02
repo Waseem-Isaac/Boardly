@@ -32,6 +32,12 @@ export class UsersService {
     const params = active === true ? new HttpParams().set('active', 'true') : new HttpParams();
     this.http.get<{ users: User[] }>('users', { params }).subscribe({
       next: (data) => {
+        // Order users by me first.
+        data.users.sort((a, b) => {
+          if (a._id === this.authService.currentUser()?._id) return -1;
+          if (b._id === this.authService.currentUser()?._id) return 1;
+          return 0;
+        });
         this._users.set(data.users);
         this.isLoading.set(false);
       },

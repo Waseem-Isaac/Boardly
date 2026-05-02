@@ -1,12 +1,13 @@
 import { Component, inject, signal } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroupDirective, NgForm, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+import { ErrorStateMatcher } from '@angular/material/core';
 import { Router } from '@angular/router';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { AuthService } from '../../../../core/services/auth.service';
+import { AuthService, RegisterRequest } from '../../../../core/services/auth.service';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
@@ -30,20 +31,25 @@ export class RegisterComponent {
   private snackbar = inject(MatSnackBar);
   isSubmitting = signal(false);
   showPassword = signal(false);
+  showConfirmPassword = signal(false);
 
   form = this.fb.group({
     name: ['', [Validators.required, Validators.minLength(3)]],
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(6)]],
-  });
+    confirmPassword: ['', Validators.required]
+  }, { validators: this.passwordsMatchValidator });
 
-  getFieldError(field: 'name' | 'email' | 'password'): string {
+  getFieldError(field: 'name' | 'email' | 'password' | 'confirmPassword'): string {
+    console.log((field === 'confirmPassword' && this.form.hasError('passwordsMismatch')))
     const control = this.form.get(field);
     if (!control?.touched) return '';
     if (control.hasError('required')) return 'This field is required';
     if (control.hasError('email')) return 'Invalid email format';
     if (control.hasError('minlength'))
       return `Minimum ${control.errors?.['minlength'].requiredLength} characters`;
+    if (field === 'confirmPassword' && this.form.hasError('passwordsMismatch'))
+      return 'Passwords do not match';
     return '';
   }
 
@@ -55,9 +61,7 @@ export class RegisterComponent {
 
     this.isSubmitting.set(true);
 
-    const { name, email, password } = this.form.value;
-
-    this.authService.register(name!, email!, password!).subscribe({
+    this.authService.register(this.form.value as RegisterRequest).subscribe({
       next: () => {
         this.snackbar.open('Registration successful!', '', 
           { 
@@ -77,4 +81,22 @@ export class RegisterComponent {
       },
     });
   }
+
+
+   passwordsMatchValidator(group: AbstractControl): ValidationErrors | null {
+    const password = group.get('password')?.value;
+    const confirm = group.get('confirmPassword')?.value;
+    return password && confirm && password !== confirm ? { passwordsMismatch: true } : null;
+  }
+
+  /**
+   * <mat-error> only renders when the control itself is invalid. Since confirmPassword only has Validators.required and its value is filled, the control is valid — 
+   *  so <mat-error> never shows, even though getFieldError correctly returns the mismatch message.
+   *  The fix is a custom ErrorStateMatcher on the confirmPassword input that also checks the group-level error.
+   */
+  crossFieldMatcher: ErrorStateMatcher = {
+    isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
+      return !!(control?.touched && (control.invalid || form?.hasError('passwordsMismatch')));
+    }
+  };
 }

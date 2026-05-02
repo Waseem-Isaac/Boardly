@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, signal, ViewEncapsulation } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroupDirective, NgForm, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -9,6 +9,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AuthService } from '../../../core/services/auth.service';
 import { Footer } from '../../../shared/components/footer/footer';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { ErrorStateMatcher } from '@angular/material/core';
 
 // TODO: postponed — re-enable when confirm password field is added back
 // function passwordsMatchValidator(group: AbstractControl): ValidationErrors | null {
@@ -47,16 +48,16 @@ export class SetPasswordComponent implements OnInit {
   token = signal<string | null>(null);
   invitedName = signal<string>('');
 
-  isValidating = signal(false);
+  isValidating = signal(true);
   tokenError = signal('');
   isSubmitting = signal(false);
   showPassword = signal(false);
-  // showConfirm = signal(false); // TODO: postponed
+  showConfirmPassword = signal(false);
 
   form = this.fb.group({
     password: ['', [Validators.required, Validators.minLength(6)]],
-    // confirmPassword: ['', Validators.required], // TODO: postponed
-  });
+    confirmPassword: ['', Validators.required]
+  }, { validators: this.passwordsMatchValidator });
 
   ngOnInit(): void {
     const token = this.route.snapshot.paramMap.get('token');
@@ -80,19 +81,17 @@ export class SetPasswordComponent implements OnInit {
     });
   }
 
-  getFieldError(field: 'password'): string {
+  getFieldError(field: 'password' | 'confirmPassword'): string {
     const control = this.form.get(field);
     if (!control?.touched) return '';
     if (control.hasError('required')) return 'This field is required';
     if (control.hasError('minlength'))
       return `Minimum ${control.errors?.['minlength'].requiredLength} characters`;
+
+    if (field === 'confirmPassword' && this.form.hasError('passwordsMismatch'))
+      return 'Passwords do not match';
     return '';
   }
-
-  // get confirmMismatch(): boolean { // TODO: postponed
-  //   const confirm = this.form.get('confirmPassword');
-  //   return !!confirm?.touched && !!this.form.hasError('passwordsMismatch');
-  // }
 
   onSubmit(): void {
     if (this.form.invalid) {
@@ -102,9 +101,9 @@ export class SetPasswordComponent implements OnInit {
 
     this.isSubmitting.set(true);
 
-    const { password } = this.form.value;
+    const { password, confirmPassword } = this.form.value;
 
-    this.authService.setPassword(this.token()!, password!).subscribe({
+    this.authService.setPassword(this.token()!, password!, confirmPassword!).subscribe({
       next: () => {
         this.snackbar.open('Password set successfully!', '', 
           { 
@@ -123,4 +122,22 @@ export class SetPasswordComponent implements OnInit {
       },
     });
   }
+
+
+  passwordsMatchValidator(group: AbstractControl): ValidationErrors | null {
+    const password = group.get('password')?.value;
+    const confirm = group.get('confirmPassword')?.value;
+    return password && confirm && password !== confirm ? { passwordsMismatch: true } : null;
+  }
+
+  /**
+   * <mat-error> only renders when the control itself is invalid. Since confirmPassword only has Validators.required and its value is filled, the control is valid — 
+   *  so <mat-error> never shows, even though getFieldError correctly returns the mismatch message.
+   *  The fix is a custom ErrorStateMatcher on the confirmPassword input that also checks the group-level error.
+   */
+  crossFieldMatcher: ErrorStateMatcher = {
+    isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
+      return !!(control?.touched && (control.invalid || form?.hasError('passwordsMismatch')));
+    }
+  };
 }

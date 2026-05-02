@@ -4,7 +4,7 @@
 <form [formGroup]="form" (ngSubmit)="onSubmit()" class="fields" novalidate>
   <div class="field">
     <label class="label mb-1" for="name">Full Name</label>
-    <mat-form-field appearance="outline" class="field full-width">
+    <mat-form-field appearance="outline" class="full-width">
       <input matInput formControlName="name" placeholder="e.g. Jane Doe" autocomplete="name" />
       <mat-error>{{ getFieldError('name') }}</mat-error>
     </mat-form-field>
@@ -18,9 +18,10 @@
     </mat-form-field>
   </div>
 
+  <!-- Password -->
   <div class="field">
     <label class="label mb-1" for="password">Password</label>
-    <mat-form-field appearance="outline" class="field full-width">
+    <mat-form-field appearance="outline" class="full-width">
       <input matInput formControlName="password" [type]="showPassword() ? 'text' : 'password'"
         placeholder="Min. 6 characters" autocomplete="new-password" />
       <button mat-icon-button matSuffix type="button" (click)="showPassword.set(!showPassword())"
@@ -31,7 +32,21 @@
     </mat-form-field>
   </div>
 
-  <button class="btn-secondary submit-btn" type="submit" [disabled]="isSubmitting()">
+  <!-- Confirm Password -->
+  <div class="field">
+    <label class="label mb-1" for="confirmPassword">Confirm Password</label>
+    <mat-form-field appearance="outline" class="full-width">
+      <input matInput formControlName="confirmPassword" [errorStateMatcher]="crossFieldMatcher" [type]="showConfirmPassword() ? 'text' : 'password'"
+        placeholder="Re-enter your password" autocomplete="new-password" />
+      <button mat-icon-button matSuffix type="button" (click)="showConfirmPassword.set(!showConfirmPassword())"
+        [attr.aria-label]="showConfirmPassword() ? 'Hide password' : 'Show password'">
+        <mat-icon>{{ showConfirmPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+      </button>
+      <mat-error>{{ getFieldError('confirmPassword') }}</mat-error>
+    </mat-form-field>
+  </div>
+
+  <button class="btn-secondary submit-btn" type="submit" [disabled]="isSubmitting() || form.invalid">
     @if (isSubmitting()) {
     <mat-spinner diameter="18" />
     Creating account...

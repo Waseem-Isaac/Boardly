@@ -32,12 +32,6 @@
     <div class="users-grid">
       @for (user of activeUsers(); track user._id) {
         <div class="user-card">
-          @if(user._id !== authService.currentUser()?._id) {
-             <button class="delete-btn" mat-icon-button (click)="deleteUser(user._id!)">
-              <mat-icon>close</mat-icon>
-            </button>
-          }
-         
           <div class="user-avatar lg" ><img [src]="user?.avatarUrl" alt=""></div>
           <div class="user-info">
             <div class="user-name d-flex align-items-center">
@@ -48,6 +42,13 @@
             </div>
             <span class="user-email">{{ user.email }}</span>
           </div>
+
+
+           @if(user._id !== authService.currentUser()?._id) {
+             <button class="delete-btn" mat-icon-button (click)="deleteUser(user._id!)">
+              <mat-icon>close</mat-icon>
+            </button>
+          }
         </div>
       }
     </div>
