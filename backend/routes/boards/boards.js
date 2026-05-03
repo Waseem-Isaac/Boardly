@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 const Board = require('../../models/board');
 const TaskRouter = require('./tasks');
+const Task = require('../../models/task');
 
 /**
  * Routes for boards:
@@ -21,8 +22,20 @@ DELETE  /boards/:boardId/tasks/:taskId → delete task
 // Get all boards
 router.get('/', async (req, res) => {
   try {
-    const boards = await Board.find({ createdBy: req.user._id }).sort({ createdAt: -1 });
+    let boards;
+
+    if (req.user.role === 'TEAM_LEAD') {
+      // Team Lead — sees all boards he created
+      boards = await Board.find({ createdBy: req.user._id }).sort({ createdAt: -1 });
+
+    } else {
+      // Team Member — sees only boards where they have at least one task
+      const boardIds = await Task.distinct('boardId', { assignee: req.user._id });
+      boards = await Board.find({ _id: { $in: boardIds } }).sort({ createdAt: -1 });
+    }
+
     res.json({ boards, meta: { totalCount: boards.length } });
+
   } catch (err) {
     res.status(500).json({ error: 'Failed to fetch boards' });
   }
@@ -74,6 +87,10 @@ router.delete('/:boardId', async (req, res) => {
   try {
     const board = await Board.findOneAndDelete({ _id: req.params.boardId, createdBy: req.user._id });
     if (!board) return res.status(404).json({ error: 'Board not found' });
+
+    // Delete all tasks belonging to this board
+    await Task.deleteMany({ boardId: req.params.boardId });
+
     res.json({ message: 'Board deleted successfully' });
   } catch (err) {
     res.status(500).json({ error: 'Failed to delete board' });

@@ -44,7 +44,7 @@
           </div>
 
 
-           @if(user._id !== authService.currentUser()?._id) {
+           @if(user._id !== authService.currentUser()?._id && authService.currentUser()?.role === 'TEAM_LEAD'){
              <button class="delete-btn" mat-icon-button (click)="deleteUser(user._id!)">
               <mat-icon>close</mat-icon>
             </button>

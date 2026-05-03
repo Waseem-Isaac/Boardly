@@ -7,7 +7,8 @@ const userSchema = new mongoose.Schema({
   email:                  { type: String, required: true, unique: true, trim: true, lowercase: true },
   password:               { type: String, select: false },
   active:                 { type: Boolean, default: false },
-  invitationToken:        { type: String, select: false }   // stored as SHA-256 hash
+  invitationToken:        { type: String, select: false },   // stored as SHA-256 hash
+  role:                   { type: String, enum: ['TEAM_LEAD', 'MEMBER'], required: true }
 }, { 
   timestamps: true,
   toJSON:   { virtuals: true },  // avatar auto-included in res.json()

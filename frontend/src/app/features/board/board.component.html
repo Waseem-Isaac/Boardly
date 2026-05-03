@@ -1,13 +1,14 @@
 <div class="board">
+  @if (activeBoard()) {
   <div class="board-header">
     <div class="board-name">
       <!-- Board name & Inline text field to edit the board name into one element -->
-       <mat-form-field subscriptSizing="dynamic" appearance="outline" class="board-name-field editable-text">
-        <input matInput [value]="activeBoard()?.name" (blur)="updateBoardName(activeBoard()?._id, $event.target.value)" />
-         <mat-icon matPrefix class="edit-icon">edit</mat-icon>  
+       <mat-form-field subscriptSizing="dynamic" appearance="outline" class="board-name-field editable-text" >
+        <input matInput [value]="activeBoard()?.name" (blur)="updateBoardName(activeBoard()?._id, $event.target.value)" [disabled]="authService.currentUser()?.role !== 'TEAM_LEAD'" />
+          @if(authService.currentUser()?.role === 'TEAM_LEAD') {
+            <mat-icon matPrefix class="edit-icon">edit</mat-icon>
+          }
       </mat-form-field>
-
-      <!-- {{ activeBoard()?.name }} -->
     </div>
 
     <div class="board-actions d-flex align-items-center">
@@ -18,11 +19,29 @@
           }
         </mat-select>
       </mat-form-field>
-      <button mat-icon-button (click)="openAddBoardDialog()"  class="btn-primary-icon">
+      @if(authService.currentUser()?.role === 'TEAM_LEAD') {
+      <button mat-icon-button (click)="openAddBoardDialog()" class="btn-primary-icon">
         <mat-icon>add_circle</mat-icon>
       </button>
+    }
     </div>
   </div>
+}
 
-  <app-board-tasks />
+  @if (activeBoard()) {
+    <app-board-tasks />
+  } @else if (!isLoading()) {
+    <div class="empty-state">
+      <mat-icon class="empty-state-icon">dashboard</mat-icon>
+      <h2>No boards yet</h2>
+      @if (authService.currentUser()?.role === 'TEAM_LEAD') {
+        <p>You don't have any boards yet. Create one to start managing your tasks.</p>
+        <button mat-flat-button color="primary" (click)="openAddBoardDialog()">
+          <mat-icon>add</mat-icon> Create your first board
+        </button>
+      } @else {
+        <p>Welcome! No tasks have been assigned to you so far.</p>
+      }
+    </div>
+  }
 </div>

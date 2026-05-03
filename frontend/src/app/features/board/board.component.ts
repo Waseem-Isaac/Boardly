@@ -13,6 +13,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialog } from '@angular/material/dialog';
 import { BoardAddComponent } from './components/board-add/board-add.component';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-board',
@@ -31,6 +32,7 @@ import { BoardAddComponent } from './components/board-add/board-add.component';
 })
 export class BoardComponent implements OnInit{
   boardsService = inject(BoardService);
+  authService = inject(AuthService);
   private dialog = inject(MatDialog);
 
   activeBoard = this.boardsService.activeBoard;

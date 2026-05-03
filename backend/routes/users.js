@@ -37,6 +37,7 @@ router.post('/', async (req, res, next) => {
       name,
       email: normalizedEmail,
       invitationToken: hashedToken,
+      role: 'MEMBER' // for invited users
     });
 
     // Send invitation email with the plain token

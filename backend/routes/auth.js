@@ -37,13 +37,14 @@ router.post('/register', async (req, res, next) => {
       email: normalizedEmail,
       password: hashedPassword,
       active: true,
+      role: 'TEAM_LEAD' // for self-registered users
     });
 
     //  Auto-create a default board for the new user
     await Board.create({ name: 'My First Board', createdBy: user._id });
 
     const token = jwt.sign(
-      { _id: user._id, email: user.email },
+      { _id: user._id, email: user.email, role: user.role },
       process.env.JWT_SECRET,
       { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
     );
@@ -56,7 +57,8 @@ router.post('/register', async (req, res, next) => {
         email: user.email,
         active: user.active,
         createdAt: user.createdAt,
-        avatarUrl: user.avatarUrl
+        avatarUrl: user.avatarUrl,
+        role: user.role
       },
     });
   } catch (err) {
@@ -87,7 +89,7 @@ router.post('/login', async (req, res, next) => {
     }
 
     const token = jwt.sign(
-      { _id: user._id, email: user.email },
+      { _id: user._id, email: user.email, role: user.role },
       process.env.JWT_SECRET,
       { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
     );
@@ -99,6 +101,7 @@ router.post('/login', async (req, res, next) => {
         name: user.name,
         email: user.email,
         active: user.active,
+        role: user.role,
         avatarUrl: user.avatarUrl
       },
     });
