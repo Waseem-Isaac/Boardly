@@ -60,8 +60,12 @@ export class BoardComponent implements OnInit{
     if (newName.trim() === this.activeBoard()?.name) return;
     this.boardsService.updateBoard(boardId, { name: newName.trim() }).subscribe({
       error: (error) => {
-        this.snackbar.open('Failed to update board name', 'Close', { duration: 3000 });
-        newName = this.activeBoard()?.name || '';
+        this.snackbar.open('Failed to update board name', 'Close', { 
+            duration: 3000 , 
+            panelClass: ['snackbar-error'] , horizontalPosition: 'center', verticalPosition: 'top'
+          });
+        // revert to old name
+        this.boardsService.setActiveBoard(this.boardsService.activeBoard());
       },
     });
   }
@@ -79,7 +83,10 @@ export class BoardComponent implements OnInit{
         }
       },
       error: (error) => {
-        this.snackbar.open('Failed to delete board', 'Close', { duration: 3000 });
+        this.snackbar.open('Failed to delete board', 'Close', { 
+            duration: 3000 , 
+            panelClass: ['snackbar-error'] , horizontalPosition: 'center', verticalPosition: 'top'
+          });
       },
     });
   }
