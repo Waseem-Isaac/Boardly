@@ -5,11 +5,12 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { BoardService } from '../../board.service';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-board-add',
   standalone: true,
-  imports: [MatDialogModule, MatButtonModule, MatFormFieldModule, MatInputModule, FormsModule],
+  imports: [MatDialogModule, MatButtonModule, MatFormFieldModule, MatInputModule, FormsModule, MatIconModule],
   templateUrl: './board-add.component.html',
   styleUrls: ['./board-add.component.scss'],
 })

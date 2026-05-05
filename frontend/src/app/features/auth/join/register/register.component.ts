@@ -41,7 +41,6 @@ export class RegisterComponent {
   }, { validators: this.passwordsMatchValidator });
 
   getFieldError(field: 'name' | 'email' | 'password' | 'confirmPassword'): string {
-    console.log((field === 'confirmPassword' && this.form.hasError('passwordsMismatch')))
     const control = this.form.get(field);
     if (!control?.touched) return '';
     if (control.hasError('required')) return 'This field is required';

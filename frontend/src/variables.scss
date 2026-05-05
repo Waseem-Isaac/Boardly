@@ -1,13 +1,11 @@
 :root {
   --color-primary: #e3783e;
   --color-primary-hover: #ea580c;
-  // ea580c
-  // --color-primary: #ec9f76;
+  --color-primary-light: #fad4bb;
   --color-primary-contrast: #ffffff;
   --color-body-bg: #faf6f0;
   --color-primary-active: #fef0e8;
   --color-primary-active-rgba: rgba(227, 120, 62, 0.1);
-  --color-secondary-hover: #fad4bb;
   --color-dark: #212121;
   --color-light-grey: #ede5d8;
   --color-danger: #d32f2f;
@@ -20,13 +18,11 @@
   --color-info: #1976d2;
   --color-info-light: #e3f2fd;
   --color-inactive: #fbfbfb;
-  --color-badge-risk: #ffebee;
+  --color-badge-risk: #ffebee;  
   --color-badge-warning: #fff3e0;
-
   --radius-lg: 8px;
   --radius-md: 4px;
   --radius-xl: 12px;
-
   --mat-toolbar-standard-height: 45px;
   --footer-height: 55px;
   --sidenav-width: 190px;

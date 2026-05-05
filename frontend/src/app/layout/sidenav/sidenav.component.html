@@ -10,20 +10,22 @@
     <a class="nav-item" mat-list-item [routerLink]="item.route" routerLinkActive="active-nav-item"
       [routerLinkActiveOptions]="{ exact: true }" (click)="layout.isMobile() && layout.close()">
       <!-- <img [src]="item.iconPath" alt="{{ item.label }} icon" class="nav-icon"> -->
-       <mat-icon class="nav-icon">{{ item.matIcon }}</mat-icon>
+      <mat-icon class="nav-icon">{{ item.matIcon }}</mat-icon>
       {{ item.label }}
     </a>
     }
   </div>
 
 
+  @if(authService.currentUser()?.role === 'TEAM_LEAD') {
   <div class="sidebar-footer">
-    <button (click)="openAddTaskDialog()" class="m-4 btn-primary full-width" >
+    <button (click)="openAddBoardDialog()" class="m-4 btn-primary full-width">
       <span class="d-flex align-items-center justify-content-center">
         <mat-icon class="d-flex align-items-center justify-content-center">add</mat-icon>
-        New Task
+        New Board
       </span>
     </button>
   </div>
+  }
 
 </mat-nav-list>

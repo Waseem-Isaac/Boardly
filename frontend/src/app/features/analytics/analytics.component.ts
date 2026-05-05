@@ -68,7 +68,7 @@ export class AnalyticsComponent implements OnInit {
       legend: { position: 'top' },
       title: {
         display: true,
-        text: 'Tasks by Status & Priority',
+        text: 'Tasks by Status & Priority (Per active Board)',
         align: 'start',
         font: { size: 15, weight: 'bold' },
         color: '#212121',

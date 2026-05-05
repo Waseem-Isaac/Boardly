@@ -30,25 +30,37 @@
           position: static;
           transform: none;
         }
-       
       }
 
       .board-actions {
         .mat-mdc-select-panel { padding: 0;}
-        // .add-board-btn {
-        //   font-size: 0.875rem;
-        //   font-weight: 600;
-        //   background-color: var(--color-primary-active);
-        // }
-
-
-
-        // .delete-btn {
-        //   font-size: 0.875rem;
-        //   font-weight: 600;
-        //   background-color: var(--color-danger);
-        // }
       }
+
+      @media screen and (max-width: 585px) {
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: flex-start;
+        padding: 0 1rem;
+
+
+        .board-title {
+          width: 100%;
+          .board-name-field {
+            width: 100%;
+          }
+        }
+        .board-actions {
+          width: 100%;
+           .filter-select {
+            width: 100%;
+          }
+        }
+       
+      }
+
+        @media screen and (max-width: 450px) {
+          padding: 0;
+        }
     }
   }
 }
@@ -73,7 +85,7 @@
       align-items: center;
       justify-content: center;
       gap: 0.75rem;
-      height: 60vh;
+      height: 70vh;
       text-align: center;
       color: var(--color-neutral);
 

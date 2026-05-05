@@ -166,6 +166,24 @@ app-set-password {
         font-weight: bold;
         margin-top: 1rem;
       }
+
+
+      @media screen and (max-width: 769px) {
+        // width: 90%;
+        // min-width: 300px;
+        // width: 90%;
+        padding: 1rem;
+       .title {
+          font-size: 1.5rem;
+        }
+        .subtitle {
+          font-size: 0.9rem;
+        }
+       .submit-btn {
+          height: 48px;
+          font-size: 0.9rem;
+        }
+       }
     }
 
     .spacer {

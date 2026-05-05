@@ -8,7 +8,8 @@ import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
 import { LayoutService } from '../../core/services/layout.service';
-import { TaskAddComponent } from '../../features/board/components/task/task-add/task-add.component';
+import { BoardAddComponent } from '../../features/board/components/board-add/board-add.component';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-sidenav',
@@ -20,14 +21,16 @@ import { TaskAddComponent } from '../../features/board/components/task/task-add/
 export class SidenavComponent {
   protected layout = inject(LayoutService);
   private dialog = inject(MatDialog);
+  authService = inject(AuthService);
 
   navItems = [
     { label: 'Board', route: '/board', matIcon: 'dashboard' },
-    { label: 'Analytics', route: '/analytics', matIcon: 'show_chart' },
     { label: 'Team', route: '/users', matIcon: 'supervisor_account' },
+    { label: 'Analytics', route: '/analytics', matIcon: 'show_chart' },
+
   ];
 
-  openAddTaskDialog(): void {
-    this.dialog.open(TaskAddComponent, { panelClass: 'app-dialog', disableClose: true });
+  openAddBoardDialog(): void {
+    this.dialog.open(BoardAddComponent, { panelClass: ['app-dialog', 'sm'], disableClose: true });
   }
 }
